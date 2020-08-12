@@ -1,0 +1,1919 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, es-noquoting]{babel}
+%\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm, mathtools}
+\usepackage{tikz,tikz-cd}
+\usetikzlibrary{arrows, babel}
+\usepackage{url}
+\usepackage[colorlinks=true,linktocpage=true,pagebackref=true,linkcolor=blue]{hyperref}
+%\usepackage{titlesec}
+%\usepackage{remreset}
+%\usepackage{enumitem}
+\usepackage{titlepic}
+\usepackage{graphicx}
+\usepackage{anyfontsize}
+\usepackage{epigraph}
+
+%Fuente Times:
+%\usepackage{newtxtext}
+%\usepackage{newtxmath}
+%Fuente Libertine:
+%\usepackage{libertine}
+%\usepackage[libertine]{newtxmath}
+%Fuente Charter:
+\usepackage[charter, cal=cmcal]{mathdesign}
+
+%Boondox para el mathscr:
+\usepackage[scr=boondox]{mathalfa}
+
+\newtheorem{thm}{Teorema}[section]
+\newtheorem{prop}[thm]{Proposición}
+\newtheorem{lema}{Lema}
+\newtheorem*{lema*}{Lema}
+\newtheorem{corol}[thm]{Corolario}
+\theoremstyle{definition} \newtheorem{defn}[thm]{Definición}
+\theoremstyle{definition} \newtheorem{ejemplo}[thm]{Ejemplo}
+\theoremstyle{definition} \newtheorem{ejercicio}[thm]{Ejercicio}
+\newtheorem{obs}[thm]{Observación}
+
+
+\def\CC{\mathbb{C}}
+\def\RR{\mathbb{R}}
+\def\OO{\mathscr{O}}
+\def\FF{\mathscr{F}}
+\def\GG{\mathscr{G}}
+\def\HH{\mathscr{H}}
+\def\Op{\mathbf{Op}}
+\def\UU{\mathfrak{U}}
+\def\VV{\mathfrak{V}}
+\def\GL{\mathrm{GL}}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Span}{span}
+\def\delbar{\bar{\partial}}
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\pr}{pr}
+\DeclareMathOperator{\hol}{hol}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\tr}{tr}
+
+\title{Introducción a la teoría de Hodge no abeliana}
+\author{Guillermo Gallego Sánchez}
+\date{Última versión: \today}
+
+\begin{document}
+\maketitle
+\section{Haces y cohomología}
+\subsection{Prehaces y haces}
+Supongamos que $S$ es un espacio topológico. Asociada a $S$ podemos considerar una categoría, que denotamos por $\Op_S$, cuyos objetos son los subconjuntos abiertos de $S$ y cuyos morfismos están dados por las inclusiones entre abiertos $V\subset U$.
+
+\begin{defn}
+  Un \emph{prehaz de grupos} (o, simplemente, un \emph{prehaz}) en $S$ es un functor contravariante $\Op_S \rightarrow \mathbf{Grp}$.
+\end{defn}
+
+En otras palabras, un prehaz $\FF$ asigna, a cada subconjunto $U\subset S$, un grupo $\FF(U)$, cuyos elementos llamamos \emph{secciones de $\FF$ en $U$}, y, a cada inclusión $V\subset U$, un \emph{homomorfismo de restricción} $$r^U_V:\FF(U) \rightarrow \FF(V).$$
+
+\begin{ejemplo}
+El ejemplo más importante de prehaz es el \emph{prehaz de las funciones continuas}. Si $S$ es un espacio topológico y $G$ es un grupo cualquiera, definimos el prehaz $C_S(-,G)$ en $S$ dado por
+\begin{equation*}
+  C_S(U,G) = \left\{ \text{Aplicaciones continuas } U\rightarrow G \right\},
+\end{equation*}
+y con homomorfismos de restricción dados, precisamente, por las restricciones
+\begin{align*}
+  r^U_V :C_S(U,G) &\longrightarrow C_S(V,G)\\ 
+    f &\longmapsto f|_V. 
+  \end{align*}
+\end{ejemplo}
+
+  Tomando este ejemplo como paradigma, en general vamos a adoptar la notación $f|_V= r^U_V(f)$ para cualquier haz $\FF$ y cualquier $f\in \FF(U)$.
+
+  El prehaz de las funciones continuas tiene una serie de propiedades «buenas» extra que nos gustaría tener en general. La primera propiedad se conoce como \emph{localidad} y consiste en que, si tomamos $U\subset S$ un subconjunto abierto y $\mathfrak{U}$ un recubrimiento por abiertos de $U$, esto es $U=\bigcup_{V \in \mathfrak{U}} V$, entonces, si $f,g:U\rightarrow G$ son dos funciones tales que $f|_{V} = g|_{V}$, para cada $V\in \mathfrak{U}$, tenemos que $f=g$. La segunda propiedad es la propiedad de \emph{pegado}: si para cada $V\in \mathfrak{U}$ podemos definir una $f_V:V\rightarrow G$ de tal forma que $f_V|_{V\cap W} = f_W|_{V\cap W}$ para cada $V,W \in \mathfrak{U}$, entonces existe una función $f:U\rightarrow G$ tal que $f|_V=f_V$ para cada $V\in \mathfrak{U}$. Estas dos propiedades pueden juntarse en una sola si añadimos a la propiedad de pegado la condición extra de que la $f$ obtenida sea única. Así, definimos:
+
+  \begin{defn}
+    Un prehaz $\FF$ es un \emph{haz} si, para cada subconjunto abierto $U\subset S$, dado un recubrimiento por abiertos $\mathfrak{U}$ de $U$ y una colección de elementos $f_V \in \FF(V)$ para cada $V\in \mathfrak{U}$ tal que, para cada $V,W\in \mathfrak{U}$,
+    \begin{equation*}
+      f_V|_{V\cap W} = f_W|_{V\cap W},
+    \end{equation*}
+    entonces existe una única $f\in \FF(U)$ tal que $f|_V=f_V$ para cada $V \in \mathfrak{U}$.
+  \end{defn}
+
+  Veamos ahora la condición de ser un haz de una forma distinta. Consideremos un prehaz $\FF$, un subconjunto abierto $U\subset S$ y un recubrimiento por abiertos $\UU$ de $U$. Además, será conveniente que fijemos un buen orden en el conjunto $\UU$. 
+
+  Definimos el conjunto de las \emph{$0$-cocadenas de \v{C}ech} de $\FF$ en $\UU$ como
+  \begin{equation*}
+    C^0(\UU,\FF) = \prod_{V\in \UU} \FF(V).
+  \end{equation*}
+  Definimos también el conjunto de las \emph{$1$-cocadenas de \v{C}ech} de $\FF$ en $\UU$ como
+  \begin{equation*}
+    C^1(\UU,\FF) = \prod_{V<W\in \UU} \FF(V\cap W).
+  \end{equation*}
+  Los elementos de $C^0(\UU,\FF)$ pueden escribirse como $(f_V)_{V\in \UU}$ y los elementos de $C^1(\UU,\FF)$ como $(f_{VW})_{V<W \in \UU}$. Nótese que podemos olvidarnos del buen orden fijado en $\UU$ si simplemente, para $V<W$, definimos $f_{WV}=f_{VW}^{-1}$. 
+  
+  Ahora, las aplicaciones de restricción inducen aplicaciones naturales
+  \begin{align*}
+    d_0 :\FF(U)&\longrightarrow C^0(\UU,\FF)\\ 
+    f &\longmapsto (f|_V)_{V\in \UU}
+    \end{align*}
+    \begin{align*}
+      d_1' :C^0(\UU,\FF)&\longrightarrow C^1(\UU,\FF)\\ 
+      (f_V)_{V\in \UU} &\longmapsto (f_V|_{V\cap W})_{V,W \in \UU}
+      \end{align*}
+      y
+    \begin{align*}
+      d_1'' :C^0(\UU,\FF)&\longrightarrow C^1(\UU,\FF)\\ 
+      (f_V)_{V\in \UU} &\longmapsto (f_W|_{V\cap W})_{V,W \in \UU}.
+      \end{align*}
+
+  Podemos dar entonces una nueva formulación de la condición de haz. Un prehaz $\FF$ en $S$ es un haz si, para cada subconjunto abierto $U\subset S$ y para cualquier recubrimiento por abiertos $\UU$ de $U$, la aplicación $d_0$ es inyectiva y el diagrama
+  \begin{center}
+    \begin{tikzcd}
+      \FF(U) \arrow[hook]{r}{d_0} & C^0(\UU,\FF) \arrow[shift left=.75ex]{r}{d_1'} \arrow[shift right=.75ex, swap]{r}{d_1''} & C^1(\UU,\FF),
+    \end{tikzcd}
+  \end{center}
+  es un ecualizador. Esto quiere decir que
+  \begin{equation*}
+    \FF(U)=\left\{ f\in C^0(\UU,\FF) : d_1'(f) = d_1''(f) \right\}.
+  \end{equation*}
+  Más aún, nótese que al estar definidos como productos cartesianos, los conjuntos $C^0(\UU,\FF)$ y $C^1(\UU,\FF)$ heredan una estructura de grupo, y podemos definir la aplicación
+  \begin{align*}
+    d_1 :C^0(\UU,\FF)&\longrightarrow C^1(\UU,\FF)\\ 
+    (f_V)_{V\in \UU} &\longmapsto (f_V|_{V\cap W} f_W|_{V\cap W}^{-1})_{V,W \in \UU}. 
+    \end{align*}
+    Así, la condición de haz equivale a decir que $\FF(U)= \ker d_1$, o lo que es lo mismo, que la siguiente sucesión es exacta
+    \begin{center}
+      \begin{tikzcd}
+	1 \rar & \FF(U) \arrow{r}{d_0} & C^0(\UU,\FF) \arrow{r}{d_1} & C^1(\UU,\FF).
+      \end{tikzcd}
+    \end{center}
+
+    \subsection{Sucesiones exactas y cohomología de haces}
+    Comenzamos este apartado con varias definiciones importantes.
+    \begin{defn}
+      Un \emph{morfismo de haces} $\FF \rightarrow \GG$ en un espacio topológico $S$ es una transformación natural entre los prehaces subyacentes. Es decir, es una colección de aplicaciones $\varphi_U:\FF(U) \rightarrow \GG(U)$ para cada subconjunto $U\subset S$ tal que, para cada inclusión $V\subset U$, el siguiente diagrama conmuta
+      \begin{center}
+	\begin{tikzcd}
+\FF(U)	  \arrow{rr}{\varphi_U}\arrow{dd}[anchor=east]{r^U_V} && \GG(U) \arrow{dd}[anchor=west]{r^U_V} \\ 
+	   && \\
+	   \FF(V) \arrow{rr}[anchor=south]{\varphi_V } && \GG(V).
+	 \end{tikzcd}
+       \end{center}
+    \end{defn}
+    \begin{defn}
+      Sea $S$ un espacio topológico y $\FF$ un haz en $S$. Definimos la \emph{espiga} de $\FF$ en un punto $p \in S$ como el límite directo
+      \begin{equation*}
+	\FF_p = \varinjlim_{U \ni p} \FF(U).
+      \end{equation*}
+    \end{defn}
+    En otras palabras, $\FF_p$ es el conjunto de clases de equivalencia de pares $(U,f)$, con $U$ un entorno de $p$ y $f\in \FF(U)$, donde la relación de equivalencia está dada por:
+    \begin{center}
+      $(U,f) \sim (V,g)$ si existe $W\ni p$ tal que $W\subset U\cap V$ y $f|_W = g|_W$.
+    \end{center}
+
+    \begin{defn}
+      Sean $\FF$, $\GG$ y $\HH$ haces en un espacio topológico $S$. Decimos que una sucesión de morfismos de haces
+      \begin{center}
+	\begin{tikzcd}
+	  \FF \rar & \GG \rar & \HH
+	\end{tikzcd}
+      \end{center}
+      es \emph{exacta} en $\GG$ si, para todo $p\in S$, la correspondiente sucesión inducida en las espigas
+      \begin{center}
+	\begin{tikzcd}
+	  \FF_p \rar & \GG_p \rar & \HH_p
+	\end{tikzcd}
+      \end{center}
+      es exacta en $\GG_p$; esto es, $\ker(\GG_p \rightarrow \HH_p) = \im(\FF_p \rightarrow \GG_p)$.
+
+    \end{defn}
+
+      Nótese que la exactitud de una sucesión de haces ha sido definida al nivel de las espigas y uno en principio no debería esperar que la sucesión correspondiente
+      \begin{center}
+	\begin{tikzcd}
+	  \FF(S) \rar & \GG(S) \rar & \HH(S)
+	\end{tikzcd}
+      \end{center}
+      sea exacta. El siguiente ejemplo aclara que, en efecto, la exactitud no tiene por qué preservarse al tomar secciones globales.
+
+    \begin{ejemplo}
+      Consideremos $S=\CC\setminus \{0\}$ el plano complejo «agujereado». Sobre este espacio topológico consideramos los siguientes haces:
+      \begin{itemize}
+	\item $C^\infty_S$, es el \emph{haz de funciones diferenciables} en $S$ con valores en $\CC$, definido de forma que $C^\infty_S(U)=C^\infty(U,\CC)$ es el grupo aditivo de las funciones diferenciables en $U$ con valores en $\CC$, para cada subconjunto abierto $U\subset S$.
+	\item $(C^\infty_S)^*$, está definido de forma que $(C^\infty_S)^*(U)$ es el grupo multiplicativo de las funciones diferenciables \emph{que no se anulan} en $U$.
+	\item $\underline{\mathbb{Z}}$ es el \emph{haz localmente constante con valores en $\mathbb{Z}$}, definido de forma que $\underline{\mathbb{Z}}(U)$ es el conjunto de aplicaciones localmente constantes $U\rightarrow \mathbb{Z}$.
+      \end{itemize}
+      La aplicación exponencial $\exp:C^\infty_S(U) \rightarrow (C^\infty_S)^*(U)$ induce una sucesión exacta de haces (nótese que ahora denotamos por $0$ al grupo trivial ya que, al estar trabajando con haces de grupos abelianos, usamos notación aditiva)
+      \begin{center}
+	\begin{tikzcd}
+	  0 \rar & 2\pi i \underline{\mathbb{Z}} \rar & C^\infty_S \arrow{r}{\exp} & (C^\infty_S)^* \rar & 0,
+	\end{tikzcd}
+      \end{center}
+      ya que, para todo punto $p\in S$, podemos tomar un entorno simplemente conexo $D\ni p$, donde el logaritmo está bien definido (salvo un factor $2\pi i k$, para $k\in \mathbb{Z}$). Sin embargo, globalmente en $S$ el logaritmo no está bien definido. Por ejemplo, si consideramos la función $f(z)=z$, tenemos que $f\in (C^\infty_S)^*(S)$, pero $f\not \in \exp(C^\infty_S(S))$. Esto prueba que la sucesión inducida en las secciones globales no es exacta.
+    \end{ejemplo}
+    
+    En cualquier caso, tomar secciones globales sí que respeta la exactitud «por la izquierda»:
+
+    \begin{prop}
+      Una sucesión exacta corta de haces en un espacio topológico $S$,
+      \begin{center}
+	\begin{tikzcd}
+	  1 \rar & \FF \arrow{r}{i} & \GG \arrow{r}{\pi} & \HH \rar & 1,
+	\end{tikzcd}
+      \end{center}
+      induce una sucesión exacta
+      \begin{center}
+	\begin{tikzcd}
+	  1 \rar & \FF(S) \arrow{r}{i_S} & \GG(S) \arrow{r}{\pi_S} & \HH(S).
+	\end{tikzcd}
+      \end{center}
+    \end{prop}
+    \begin{proof}
+      Sea $f\in \FF(S)$ tal que $i_S(f)=1$. Para cada $p\in S$ tenemos que $i_p(f_p)=1$ y, como $i_p$ es inyectiva, $f_p=1$. Como esto es cierto para todo $p\in S$, tenemos que $f=1$. Esto prueba que $i_S$ es inyectiva, luego la sucesión es exacta en $\FF(S)$.
+
+      Tomemos ahora $f\in \FF(S)$. Para cada $p \in S$ tenemos $\pi_p(i_p(f_p))=1$, lo que implica que $\pi_S(i_S(f_S))=1$, de modo que $\im i_S \subset \ker \pi_S$. Por otra parte, si $g\in \GG(S)$ es tal que $\pi_S(g)=1$ entonces, para todo $p\in S$, tenemos que $\pi_p(g_p)=1$. Por tanto, existe un $f_p \in \FF_p$ tal que $i_p(f_p)=g_p$. Esto implica que para cada $p\in S$ existen un entorno abierto $U\subset S$ de $p$ y un elemento $f_U\in \FF(U)$ tal que $i_U(f_U)=g_U$. Más aún, en una intersección $U\cap V$ tenemos
+      \begin{equation*}
+	i_{U\cap V}(f_U|_{U\cap V}) = g|_{U\cap V} = i_{U\cap V}(f_V|_{U\cap V})
+      \end{equation*}
+      y, como ya hemos probado que $i$ sigue siendo inyectiva al pasar a secciones globales, tenemos que $f_U|_{U\cap V} = f_V|_{U\cap V}$. Por tanto, podemos pegar las $f_U$ para obtener un elemento $f\in \FF(S)$ tal que $f|_U=f_U$ y que cumple $i_S(f)=g$. Esto demuestra que $\ker \pi_S \subset \im i_S$. En conclusión, hemos visto que la sucesión es también exacta en $\GG(S)$.
+    \end{proof}
+
+    Cabe ahora hacerse una pregunta natural: ¿qué es lo que falla en $\HH(S)$? ¿Por qué $\pi_S$ no es sobreyectiva? Es decir, buscamos cuál es la obstrucción que existe para que la exactitud pase de la situación local a la global. Lo que vamos a ver es que esta obstrucción está dada precisamente por la \emph{cohomología de haces}.
+
+    Consideremos un elemento $h\in \HH(S)$. Entonces, como $\pi_p$ es sobreyectiva, para todo $p\in S$ existe algún $g_p \in \GG_p$ tal que $h_p=\pi(g_p)$. Esto implica que podemos tomar un recubrimiento por abiertos $\mathfrak{U}$ de $S$ y, para cada $U\in \mathfrak{U}$, un elemento $g_U\in \GG(U)$ tal que $h|_U=\pi_U(g_U)$. Si pudieramos pegar las $g_U$ para obtener una sección global $g\in \GG(X)$ tal que $g|_U = g_U$, entonces $h=\pi(g)$ y tendríamos que $\pi$ es sobreyectiva. Por tanto, la obstrucción para la sobreyectividad de $\pi$ viene dada precisamente por la condición de pegado, ya que en general $g_U|_{U\cap V} \neq g_V|_{U\cap V}$. 
+    
+    Tomemos entonces el elemento $g_Ug_V^{-1} \in \GG(U\cap V)$. Tenemos que
+    \begin{equation*}
+      \pi_{U\cap V} (g_U g_V^{-1}) = h h^{-1} = 1.
+    \end{equation*}
+    Por la exactitud en $\GG(U\cap V)$, existe un elemento $f_{UV}\in \FF(U\cap V)$ tal que
+    \begin{equation*}
+      i_{U\cap V} (f_{UV}) = g_U g_V^{-1}.
+    \end{equation*}
+    Reuniendo estos elementos, obtenemos una $1$-cocadena $(f_{UV})_{U,V \in \mathfrak{U}} \in C^1(\UU,\FF)$. Ahora, esta cocadena satisface una propiedad extra,
+    \begin{equation*}
+      i_{U\cap V\cap W}(f_{UV} f_{VW} f_{UW}^{-1}) = g_U g_V^{-1} g_V g_W^{-1} (g_U g_W^{-1})^{-1} = 1,
+    \end{equation*}
+    de modo que, como $i_{U\cap V\cap W}$ es inyectiva, la cocadena satisface la \emph{condición de cociclo}:
+    \begin{equation*}
+      f_{UV} f_{VW} = f_{UW}.
+    \end{equation*}
+
+    \begin{defn}
+      Decimos que una $1$-cocadena de \v{C}ech $(f_{UV})_{U,V\in \mathfrak{U}}\in C^1(\UU,\FF)$ es un \emph{$1$-cociclo de \v{C}ech} de $\FF$ en $\UU$ si
+    \begin{equation*}
+      f_{UV} f_{VW} = f_{UW},
+    \end{equation*}
+    en $U\cap V \cap W$, para cada $U,V,W \in \UU$. El conjunto de los $1$-cociclos de \v{C}ech de $\FF$ en $\UU$ se denota por $Z^1(\FF,\UU)$.
+    \end{defn}
+
+    Ingenuamente, podríamos pensar que para estudiar la obstrucción a la exactitud $\HH(S)$ se trataría de definir una aplicación $\HH(S) \rightarrow Z^1(\UU,\FF)$, enviando cada $h\in \HH(S)$ al cociclo que acabamos de construir. Sin embargo, en seguida nos damos cuenta de que el recubrimiento $\UU$ depende del elemento $h$, de modo que esto no funciona. La forma de resolver este problema es considerando \emph{refinamientos}.
+
+    \begin{defn}
+      Sea $S$ un espacio topológico y $\UU$ y $\UU'$ dos recubrimientos por abiertos de $S$. Decimos que $\UU'$ es un \emph{refinamiento} de $\UU$ si existe una \emph{aplicación de refinamiento} $\tau:\UU' \rightarrow \UU$ tal que $U'\subset \tau(U')$ para cada $U'\in \UU$.
+    \end{defn}
+
+    Una aplicación de refinamiento induce una aplicación en las $1$-cocadenas
+    \begin{align*}
+      \tau^* :C^1(\UU,\FF)&\longrightarrow C^1(\UU',\FF) \\ 
+      (f_{U V})_{U,V \in \UU} &\longmapsto (f_{\tau(U'),\tau(V')})_{U',V' \in \UU'}. 
+      \end{align*}
+      Más aún, claramente $\tau^*$ respeta la condición de cociclo, luego induce una aplicación
+      \begin{align*}
+	\tau^* :Z^1(\UU,\FF) &\longrightarrow Z^1(\UU',\FF). 
+	\end{align*}
+	Nótese además que esta aplicación depende de la elección de aplicación de refinamiento $\tau$. 
+	
+	Sin embargo, si $\eta:\UU'\rightarrow \UU$ es otra aplicación de refinamiento, aplicando la condición de cociclo tenemos
+	\begin{equation*}
+	  (\eta^* f)_{U'V'} = f_{\eta(U') \eta(V')} = f_{\eta(U') \tau(U')} f_{\tau(U') \eta(V')} =f_{\eta(U') \tau(U')} f_{\tau(U') \tau(V')}f_{\tau(V') \eta(V')}.
+	\end{equation*}
+	Si definimos la $0$-cocadena $$(f_{U'})_{U'\in \UU'}= (f_{\eta(U')\tau(U')})_{U'\in \UU} \in C^0(\UU',\FF),$$
+	entonces
+	\begin{equation*}
+	  (\eta^* f)_{U'V'} = f_{U'} (\tau^* f)_{U'V'} f_{V'}^{-1}.
+	\end{equation*}
+
+	En general, para cualquier recubrimiento por abiertos $\UU$, el grupo de las $0$-cocadenas actúa sobre las $1$-cocadenas por «conjugación»:
+	\begin{align*}
+	   C^0(\UU,\FF) \times C^1(\UU, \FF) &\longrightarrow C^1(\UU, \FF) \\ 
+	   ( (f_U)_{U\in \UU}, (f_{UV})_{U,V \in \UU} )  &\longmapsto ( f_U f_{UV} f_V^{-1} )_{U,V \in \UU}. 
+	  \end{align*}
+	  Esta acción respeta la condición de cociclo y por tanto define una acción de $C^0(\UU,\FF)$ en $Z^1(\UU,\FF)$.
+
+	  \begin{defn}
+	    El conjunto de órbitas de esta acción se denota por $H^1(\UU,\FF)$ y se llama el \emph{primer conjunto de cohomología de \v{C}ech} de $\FF$ en $\UU$.
+	  \end{defn}
+
+	  \begin{obs}
+	    Supongamos que $\FF$ es un haz de grupos abelianos, de modo que pasamos a usar notación aditiva. En este caso, la aplicación $d_1:C^0(\UU,\FF) \rightarrow C^1(\UU,\FF)$ definida en el apartado anterior puede escribirse como 
+	    \begin{equation*}
+	      d_1 ( (f_U)_{U\in \UU} ) = ( f_U|_{U\cap V} - f_V|_{U\cap V} )_{U,V \in \UU},
+	    \end{equation*}
+	    mientras que la acción de $C^0(\UU,\FF)$ en $C^1(\UU,\FF)$ ahora se escribe como
+	    \begin{equation*}
+	      (f_U)_{U\in \UU} \cdot (f_{UV})_{U,V \in \UU} = (f_{UV} + f_U - f_V)_{U,V \in \UU} = (f_{UV})_{U,V \in \UU} + d_1((f_U)_{U\in \UU}).
+	    \end{equation*}
+	    Por tanto, la cohomología de \v{C}ech en este caso viene dada simplemente por el grupo cociente
+	    \begin{equation*}
+	      H^1(\UU,\FF) = \frac{Z^1(\UU,\FF)}{d_1(C^0(\UU,\FF))}.
+	    \end{equation*}
+	  \end{obs}
+	
+	  Por lo que hemos visto antes, es claro ahora que una aplicación de refinamiento $\tau:\UU'\rightarrow \UU$ induce una aplicación en cohomología
+	  \begin{align*}
+	    \tau^* :H^1(\UU,\FF)&\longrightarrow H^1(\UU',\FF)
+	    \end{align*}
+	    que \emph{no depende de la aplicación de refinamiento} $\tau$. Estas aplicaciones de refinamiento forman un sistema dirigido, de modo que podemos dar la siguiente definición.
+
+	    \begin{defn}
+	      Definimos el \emph{primer conjunto de cohomología de haces} de $\FF$ en $S$ como el límite directo 
+	      \begin{equation*}
+		H^1(S,\FF) = \varinjlim_{\UU} H^1(\UU,\FF).
+	      \end{equation*}
+	    \end{defn}
+
+	    En otras palabras, consideramos el conjunto de pares $(\UU,f)$, con $\UU$ un recubrimiento por abiertos de $S$ y $f\in H^1(\UU,\FF)$ y cocientamos por la relación de equivalencia:
+	    \begin{center}
+	      $(\UU,f) \sim (\UU',f')$ si existen $\tau,\tau':\UU'' \rightarrow \UU, \UU'$ tales que $\tau^*(f) = \tau'^*(f')$.
+	    \end{center}
+
+	    Finalmente, dado un elemento $h\in \HH(S)$, si tomamos el recubrimiento por abiertos $\UU$ y el cociclo $(f_{UV})_{U,V \in \UU}$ construidos antes, tomamos su clase de cohomología de \v{C}ech y su clase de equivalencia en el límite directo, obtenemos una aplicación
+	    \begin{align*}
+	      \delta :\HH(S) &\longrightarrow H^1(S,\FF)\\ 
+	      h &\longmapsto [(\UU,[(f_{UV})_{U,V \in \UU})] .
+	      \end{align*}
+	      El conjunto $H^1(S,\FF)$ no es un grupo, pero tiene un elemento distinguido $1$, la clase de equivalencia de cualquiera de los elementos neutros de los grupos de cocadenas. Tiene sentido entonces hablar de el núcleo de una aplicación con valores en $H^1(S,\FF)$ (la preimagen de $1$), de modo que podemos considerarlo como un elemento de una sucesión exacta. Lo que hemos visto con todo esto es que un elemento $h\in \HH(S)$ está en la imagen de $\pi_S$ precisamente si y solo si $\delta(h)=1$, lo que quiere decir que tenemos una sucesión exacta
+	      \begin{center}
+		\begin{tikzcd}
+		  0 \rar & \FF(S) \arrow{r}{i_S} & \GG(S) \arrow{r}{\pi_S} & \HH(S) \arrow{r}{\delta} & H^1(S,\FF).
+		\end{tikzcd}
+	      \end{center}
+
+	      Para concluir este apartado, cabe mencionar que la cohomología tiene un carácter functorial. Concretamente, cualquier morfismo de haces $\varphi:\FF \rightarrow \GG$ induce de forma natural una aplicación en las $1$-cocadenas
+	      \begin{align*}
+		\varphi_* :C^1(\UU,\FF) &\longrightarrow C^1(\UU,\GG)\\ 
+		(f_{UV})_{U,V\in \UU} &\longmapsto (\varphi_{U\cap V}(f_{UV}) )_{U,V \in \UU}. 
+		\end{align*}
+		Es claro que esta aplicación desciende bien a las cohomologías, de modo que da una aplicación
+		\begin{align*}
+		   \varphi_*:H^1(S,\FF) &\longrightarrow H^1(S,\GG).
+		  \end{align*}
+		  Tenemos entonces el siguiente resultado:
+
+		  \begin{thm}[La sucesión exacta larga en cohomología]
+  Una sucesión exacta corta de haces en un espacio topológico $S$,
+  \begin{center}
+    \begin{tikzcd}
+	  1 \rar & \FF \arrow{r}{i} & \GG \arrow{r}{\pi} & \HH \rar & 1,
+    \end{tikzcd}
+  \end{center}
+  induce una sucesión exacta
+  $$
+  1 \rightarrow \FF(S) \overset{i_S}{\rightarrow} \GG(S) \overset{\pi_S}{\rightarrow}  \HH(S) \overset{\delta}{\rightarrow} H^1(S,\FF) \overset{i_*}{\rightarrow} H^1(S,\GG) \overset{\pi_*}{\rightarrow}  H^1(S,\HH).
+      $$
+\end{thm}
+
+\begin{proof}
+  En la discusión anterior ya hemos demostrado la exactitud de la sucesión hasta $\HH(S)$. La exactitud en $H^1(S,\FF)$ es clara de la construcción de la aplicación $\delta$. Por último, la demostración de la exactitud en $H^1(S,\GG)$ es totalmente análoga a la de la exactitud en $\GG(S)$.
+\end{proof}
+
+\subsection{Algunos cálculos}
+En este apartado vamos a calcular la cohomología de algunos haces sencillos.
+
+\begin{ejemplo}[Particiones diferenciables de la unidad]
+  Supongamos que $S$ es una variedad diferenciable y consideremos el haz $C^\infty_S$ de las funciones diferenciables en $S$ con valores en $\mathbb{K}=\mathbb{R}$ ó $\CC$ (es análogo en ambos casos).
+  
+  Se trata de calcular $H^1(S,C^\infty_S)$. La clave para este cálculo es que en este caso existen las \emph{particiones diferenciables de la unidad}. Si $\mathfrak{U}$ es un recubrimiento por abiertos de $S$, entonces es posible tomar un conjunto de funciones diferenciables globalmente definidas $$\left\{ \theta_U : U \in \mathfrak{U} \right\}  \subset C^{\infty}_S(S)$$
+  tal que
+  \begin{enumerate}
+    \item para cada $U\in \mathfrak{U}$, se tiene que $\theta_U(p)=0$ si $p\not \in U$, y
+    \item $\sum_{U\in \mathfrak{U}} \theta_U = 1$.
+  \end{enumerate}
+  Este conjunto se llama una \emph{partición diferenciable de la unidad} subordinada a $\UU$.
+
+  Supongamos entonces que tenemos un par $(\mathfrak{U},(f_{UV})_{U,V\in \UU})$ representando a una clase en $H^1(S,C^\infty_S)$. Si tomamos una partición diferenciable de la unidad subordinada a $\UU$, podemos definir, para cada $U\in \UU$,
+  \begin{equation*}
+    f_U = \sum_{W\in \UU} \theta_W f_{UW} \in C^\infty_S(U).
+  \end{equation*}
+  Ahora, para $U,V \in \UU$, en $U\cap V$ tenemos
+  \begin{equation*}
+    f_U - f_V = \sum_{W\in \UU} \theta_W (f_{UW} - f_{VW}) = \sum_{W\in \UU} \theta_W f_{UV} = f_{UV}.
+  \end{equation*}
+  Concluimos entonces que $H^1(S,C^\infty_S)=0$.
+
+  Este argumento sirve análogamente para cualquier haz en el que podamos definir particiones de la unidad. En particular, se generaliza directamente para probar que los haces de formas diferenciales \emph{diferenciables}, que consideraremos más adelante, tienen todos cohomología nula. 
+  
+  Sin embargo, existen haces muy importantes que consideraremos que no admiten particiones de la unidad. Un ejemplo importante son los \emph{haces de funciones holomorfas}. Por ejemplo, si $D\subset \CC$ es un dominio, podemos considerar el haz $\OO_D$ definido de manera que si $U\subset D$ es un conjunto abierto, $\OO_D(U)$ es el conjunto de funciones holomorfas definidas en $U$. En este caso es claro que no es posible definir particiones de la unidad, ya que si una función holomorfa se anula en un abierto de $D$, debe anularse en todo $D$.
+\end{ejemplo}
+
+\begin{ejemplo}[El teorema de de Rham]
+  Sea $S$ una variedad diferenciable y $\Omega^k_S$ el \emph{haz de $k$-formas diferenciales}, de modo que, para cada subconjunto abierto $U\subset S$, el conjunto $\Omega^1_S(U)=\Omega^1(U)$ consiste en las $1$-formas diferenciales \emph{diferenciables} definidas en el abierto $U$ y con valores en $\mathbb{K}=\mathbb{R}$ ó $\CC$ (es análogo en ambos casos). 
+
+  El \emph{lema de Poincaré} garantiza que, para cada punto $p\in S$, podemos tomar un entorno $U$ de $p$ tal que la siguiente sucesión es exacta
+  \begin{center}
+    \begin{tikzcd}
+      0 \rar & \mathbb{K} \arrow[hook]{r} & C^\infty(U,\mathbb{K}) \arrow{r}{d} & \Omega^1(U) \arrow{r}{d} & \Omega^2(U).
+    \end{tikzcd}
+  \end{center}
+  Por tanto, la siguiente sucesión de haces es exacta
+  \begin{center}
+    \begin{tikzcd}
+      0 \rar & \underline{\mathbb{K}} \arrow{r} & C^\infty_S \arrow{r}{d} & \Omega^1_S \arrow{r}{d} & \Omega^2_S.
+    \end{tikzcd}
+  \end{center}
+  Defino ahora el haz $Z^1_S=\ker(d:\Omega^1_S \rightarrow \Omega^2_S)$, de forma que tenemos una sucesión exacta corta
+  \begin{center}
+    \begin{tikzcd}
+      0 \rar & \underline{\mathbb{K}} \arrow{r} & C^\infty_S \arrow{r}{d} & Z^1_S \arrow{r}{d} & 0,
+    \end{tikzcd}
+ \end{center}
+ que induce una sucesión exacta larga en cohomología
+ \begin{center}
+   \begin{tikzcd}
+     0 \rar & \mathbb{K} \rar & C^\infty(S,\mathbb{K}) \arrow{r}{d} & Z^1_S(S) \arrow{r} & H^1(S,\underline{\mathbb{K}}) \rar & 0,
+   \end{tikzcd}
+ \end{center}
+ ya que, como hemos visto en el ejemplo anterior $H^1(S,C^\infty_S) =0$. Por tanto,
+ \begin{equation*}
+   H^1(S,\underline{\mathbb{K}})\cong \coker d = \frac{Z^1_S(S)}{d(C^\infty(S,\mathbb{K}))} = H^1(S,\mathbb{K}),
+ \end{equation*}
+ donde $H^1(S,\mathbb{K})$ es por definición $Z^1_S(S)/d(C^\infty(S,\mathbb{K}))$ el \emph{primer grupo de cohomología de de Rham} de $S$, con valores en $\mathbb{K}$. El isomorfismo $H^1(S,\underline{\mathbb{K}}) \cong H^1(S,\mathbb{K})$ se conoce como el \emph{teorema de de Rham}.
+\end{ejemplo}
+
+\begin{ejemplo}[Haces constantes en una superficie compacta]
+  Consideremos $S= \Sigma_g$ la superficie topológica compacta, conexa y orientable de género $g$ y tomemos en ésta el haz constante $\underline{G}$, con $G$ un grupo abeliano libre (en la práctica, $G$ será $\mathbb{Z}$, $\mathbb{R}$ ó $\mathbb{C}$). Supongamos que tenemos una triangulación $\Delta=\left\{ C,A,V \right\}$ de $S$, donde $C$, $A$ y $V$ denotan el conjunto de las caras, las aristas y los vértices, respectivamente. Asociado a cada vértice $v \in V$ tenemos un abierto $U_v$ definido como el interior de la unión de las caras que contienen a $v$. Así, obtenemos un recubrimiento por abiertos de $S$
+  \begin{equation*}
+    \UU_{\Delta} = \left\{ U_v: v\in V \right\}.
+  \end{equation*}
+
+  Nótese en particular que los abiertos $U_v$ son conexos, de modo que 
+  \begin{equation*}
+    C^0(\UU_\Delta, \underline{G}) = \prod_{v\in V} G = G^{|V|}.
+  \end{equation*}
+  Ahora, si $v,w \in V$ son dos vértices, tenemos que $U_v \cap U_w \neq \varnothing$ si y sólo si existe una arista $a \in A$ con extremos $v$ y $w$. En tal caso, además, $U_v \cap U_w$ es conexo. Por tanto,
+  \begin{equation*}
+    C^1(\UU_\Delta, \underline{G}) = \prod_{a \in A} G = G^{|A|}.
+  \end{equation*}
+  Tenemos entonces que la aplicación $d_1: C^0(\UU_\Delta,\underline{G}) \rightarrow C^1(\UU_\Delta,\underline{G})$ tiene la forma
+  \begin{equation*}
+    \sum_{v\in V} k_v v \longmapsto  \sum_{vw \in A} (k_{v} - k_{w}) vw.
+  \end{equation*}
+
+  Por otra parte, si $u,v,w \in V$ son tres vértices, tenemos que $U_u \cap U_v \cap U_w \neq \varnothing$ si y sólo si existe una cara $c \in C$ con vértices $u$, $v$ y $w$. De nuevo, si $U_u \cap U_v \cap U_w$ es no vacío, entonces es conexo. Por tanto, un elemento $\sum_{vw\in A} k_{vw} vw \in C^1(\UU_\Delta,\underline{G})$ es un cociclo si, para todas las caras $uvw \in C$ tenemos que
+  \begin{equation*}
+    k_{uv} + k_{vw} = k_{uw}.
+  \end{equation*}
+ Podemos definir entonces la aplicación
+  \begin{align*}
+    d_2 : G^{|A|} &\longrightarrow G^{|C|}\\ 
+    \sum_{uv \in A} k_{uv} uv &\longmapsto \sum_{uvw \in C} (k_{uv} + k_{vw} - k_{uw})uvw . 
+    \end{align*}
+
+    Se trata entonces de calcular el primer grupo de cohomología $H^1(\UU_{\Delta},\underline{G})= \ker d_2 / \im d_1$. Este grupo también recibe el nombre de \emph{primer grupo de cohomología simplicial de $\Delta$ con coeficientes en $G$}, y lo denotamos por $H^1(\Delta,G)$. En primer lugar, es claro que
+    \begin{equation*}
+      \ker d_1 = \left\{ (k)_{v\in V}: k \in G \right\} \cong G,
+    \end{equation*}
+    de modo que $\im d_1 \cong G^{|V|}/G \cong G^{|V|-1}$.
+
+    Vamos a tratar ahora con la aplicación $d_2$. Nótese primero que, si $a$ es una arista, $d_2(a) = a^1 - a^2$, donde, considerando una orientación en las aristas, $a^1$ es la cara que «queda a la izquierda», mientras que $a^2$ la que «queda a la derecha», al recorrer la arista desde el exterior de la superficie. Podemos considerar la aplicación
+    \begin{align*}
+      \Sigma : G^{|C|}&\longrightarrow G\\ 
+      \sum_{c\in C} k_c c &\longmapsto \sum_{c\in C} k_c. 
+      \end{align*}
+      Afirmamos que $\ker \Sigma = \im d_2$. En efecto, claramente $\im d_2 \subset \ker \Sigma$. Por otra parte, si $\sum_{c \in C} k_c=0$, entonces podemos elegir $c_0 \in C$ y escribir
+      \begin{equation*}
+	k_{c_0} = -\sum_{c_0 \neq c \in C} k_c,
+      \end{equation*}
+      de modo que
+      \begin{equation*}
+	\sum_{c \in C} k_c c = \sum_{c \in C} k_c (c-c_0).
+      \end{equation*}
+      Ahora, como hemos asumido que la superficie $S$ es conexa, podemos tomar un camino de $c_0$ a $c$, pasando por las caras $c_0,c_1,\dots,c_n=c$ y atravesando las aristas que denotaremos por $c_{01}, c_{12}, c_{23},\dots,c_{(n-1) n}$. Tenemos entonces que
+      \begin{equation*}
+	d(c_{01}+c_{12}+c_{23}+\cdots c_{(n-1) n} ) = c_1 - c_0 + c_2 - c_1 + \cdots c - c_{n-1} = c-c_0.
+      \end{equation*}
+      Por tanto, $\sum_{c\in C} k_c c \in \im d_2$.
+      Esto prueba que $\ker \Sigma = \im d_2 \cong G^{|C|-1}$. El grupo $\ker \Sigma = \im d_2$ se llama el \emph{segundo grupo de cohomología simplicial de $\Delta$ con coeficientes en $G$} y se denota por $H^2(\Delta,G)$.
+    
+    Por el teorema de isomorfía, $G^{|C|-1} \cong G^{|A|}/\ker d_2$, luego $\ker d_2 \cong G^{|A|-|C|+1}$. Finalmente, concluimos que
+    \begin{equation*}
+      H^1(\UU_{\Delta},\underline{G}) = \ker d_2 / \im d_1 = G^{|A|-|C|+1}/G^{|V|-1} = G^{|A|-|C|-|V|+2} = G^{2g},
+    \end{equation*}
+    ya que es bien sabido que en cualquier triangulación de una superficie compacta, el número de caras menos el número de aristas más el número de vértices es igual a la característica de Euler de la superficie $\chi(S)=2-2g$, de modo que $|A|-|C|-|V|+2= -\chi(S) +2 = 2g$.
+
+    Ahora, como la característica de Euler de una superficie no depende de la triangulación, para cualquier otra triangulación $\Delta'$, tenemos que $H^1(\Delta',G)=G^{2g}$. Podemos ahora tomar el límite por refinamiento de triangulaciones para concluir que
+    \begin{equation*}
+      H^1(S,\underline{G}) \cong H^1(\Delta,G) \cong G^{2g}.
+    \end{equation*}
+\end{ejemplo}
+
+    Con este ejemplo hemos demostrado que, si $\mathbb{K}=\mathbb{R}$ ó $\mathbb{C}$, tenemos un isomorfismo
+    \begin{equation*}
+      H^1(S,\mathbb{K}) \cong H^1(\Delta,\mathbb{K}) \cong \mathbb{K}^{2g},
+    \end{equation*}
+    donde $\Delta$ es cualquier triangulación de la superficie $S$.
+    Más aún, a cada superficie le podemos asociar también el \emph{segundo grupo de cohomología de de Rham}, definido como
+    $$H^2(S,\mathbb{K}) = \coker(d: \Omega^1(S) \rightarrow \Omega^2(S)). $$
+
+    \begin{thm}[Teorema de de Rham para $H^2$]
+      Para cualquier triangulación $\Delta=\{C,A,V\}$ de una superficie $S$, existe un isomorfismo $$I:H^2(S,\mathbb{K}) \longrightarrow H^2(\Delta,\mathbb{K}).$$ Además, si consideramos la aplicación $\Sigma$ definida en el ejemplo anterior y $\int_S$ la aplicación consistente en integrar $2$-formas, el siguiente diagrama conmuta
+      \begin{center}
+	\begin{tikzcd}
+	  H^2(S,\mathbb{K}) \arrow{r}{\int_S} \arrow{d}{I} & \mathbb{K} \\
+	  H^2(\Delta, \mathbb{K}). \arrow{ru}{\Sigma}
+	 \end{tikzcd}
+       \end{center}
+    \end{thm}
+
+    Nótese que tanto $\Sigma$ como $\int_S$ están bien definidas. En primer lugar, $\Sigma$ está bien definida porque $H^2(\Delta,\mathbb{K}) = \mathbb{K}^{|V|} / \ker \Sigma$. En segundo lugar, $\int_S$ está bien definida por el teorema de Stokes:
+    \begin{equation*}
+      \int_S d \alpha = \int_{\partial S} \alpha = 0.
+    \end{equation*}
+    Una consecuencia muy importante de este teorema es que, de hecho, la aplicación
+    \begin{equation*}
+      \int_S: H^2(S,\mathbb{K}) \longrightarrow \mathbb{K}
+    \end{equation*}
+    es un isomorfismo.
+
+    Este teorema motiva también la siguiente definición:
+    \begin{defn}
+      Sea $G<\CC$ un subgrupo abeliano libre de $\CC$. Decimos que una clase de cohomología $[\omega] \in H^2(S,\CC)$ \emph{tiene coeficientes en $G$} si $\int_S \omega \in G$ o, equivalentemente, si corresponde por el isomorfismo $I$ a un elemento de $H^2(\Delta,G)$. El conjunto de estas clases de cohomología se denota por $H^2(S,G)$. En particular, cuando $G=\mathbb{Z}$, los elementos de $H^2(S,\mathbb{Z})$ se llaman \emph{clases de cohomología enteras}.
+    \end{defn}
+
+    \begin{proof}
+      Supongamos que $\omega \in \Omega^2(S)$ es una $2$-forma cerrada. Entonces, para cada vértice $v\in V$, el correspondiente abierto $U_v$ es estrellado y por tanto en él se satisface el lema de Poincaré. Esto implica que podemos hallar una $1$-forma $\alpha_v$ en cada $U_v$ tal que
+      \begin{equation*}
+	d\alpha_v = \omega|_{U_v}.
+      \end{equation*}
+      Ahora, en las intersecciones $U_v \cap U_w$, tenemos que $d(\alpha_v - \alpha_w)=0$ y, como $U_v \cap U_w$ también es estrellado, también existen funciones diferenciables $f_{vw}: S \rightarrow \mathbb{K}$ tales que $df_{vw} = \alpha_v - \alpha_w$. Finalmente, para cada $uvw \in C$, podemos definir la función
+      \begin{equation*}
+	f_{uvw} = f_{uv} + f_{vw} - f_{uw},
+      \end{equation*}
+      que claramente cumple que $d f_{uvw} = 0$, de modo que $f_{uvw} \in \mathbb{K}$. Hemos construido entonces una aplicación
+      \begin{align*}
+	\Omega^2(S) &\longrightarrow \mathbb{K}^{|C|}\\ 
+	\omega &\longmapsto \sum_{uvw \in C} f_{uvw} uvw. 
+	\end{align*}
+
+	Procedamos ahora a definir una inversa. A partir de un elemento $$f=\sum_{uvw \in C} f_{uvw} uvw \in \mathbb{K}^{|C|}$$ podemos construir la $2$-forma
+	\begin{equation*}
+	 \omega_f= \sum_{uvw \in C} f_{uvw} \theta_u d\theta_v \wedge d\theta_w,
+	\end{equation*}
+	donde $\left\{ \theta_v : v \in V \right\}$ es una partición diferenciable de la unidad subordinada al recubrimiento $\mathfrak{U}_\Delta$. Calculemos entonces $I(\omega_f)$. En primer lugar, observamos que 
+	\begin{equation*}
+	  \omega_f|_{U_u} = \sum_{v \in \partial U_u} f_{uv(v+1)} d\theta_v \wedge d\theta_{v+1} = d\left(\sum_{v \in \partial U_u} f_{uv(v+1)} \theta_v d\theta_{v+1}\right),
+	\end{equation*}
+	donde $v+1$ denota el vértice siguiente al vértice $v$ siguiendo el orden de integración en $\partial U_u$.
+	Por tanto, la correspondiente $\alpha_u$ tal que $d\alpha_u=\omega_f|_{U_u}$, debe ser de la forma
+	\begin{equation*}
+	  \alpha_u = \sum_{w\in \partial U_u} f_{uw(w+1)} \theta_w d\theta_{w+1} + dg_u,
+	\end{equation*}
+	para alguna función diferenciable $g_u : U_u \rightarrow \mathbb{K}$. Ahora, en $U_{u} \cap U_{v}$,
+	\begin{align*}
+	  \alpha_{u} - \alpha_{v} &= \left.\sum_{w \in \partial U_{u}} f_{uw(w+1)} \theta_w d\theta_{w+1} -  \sum_{w \in \partial U_{v}} f_{vw(w+1)} \theta_w d\theta_{w+1} \right|_{U_{u} \cap U_{v}} + d(g_{u}-g_{v}) \\
+	  & =  \sum_{w, \  uvw \in C} f_{uvw} d\theta_w + d(g_u - g_v) = d\left( \sum_{w, \  uvw \in C} f_{uvw} \theta_w + g_u -g_{v}\right) .
+	\end{align*}
+	En consecuencia, podemos tomar
+	\begin{equation*}
+	  f_{uv} = \sum_{w, \  uvw \in C} f_{uvw} \theta_w + g_u -g_{v} + g_{uv},
+	\end{equation*}
+	para $g_{uv} \in \mathbb{K}$ alguna constante, de modo que $df_{uv}=\beta_u - \beta_v$. Concluimos entonces que, en $U_{u} \cap U_{v} \cap U_{w}$
+	\begin{align*}
+	  f_{uv} &+ f_{vw}  - f_{uw} \\ &= g_{uv} + g_{vw} - g_{uw} + \left. \sum_{k, \  uvk \in C} f_{uvk} \theta_k + \sum_{k, \  vwk \in C} f_{vwk} \theta_k - \sum_{k, \  uwk \in C} f_{uwk} \theta_k \right|_{U_{u} \cap U_{v} \cap U_{w}} \\ & = d_2\left( \sum_{a \in A} g_{a} a\right) + f_{uvw} + f_{uvw} - f_{uvw}= d_2\left( \sum_{a \in A} g_{a} a\right)+f_{uvw} .
+	\end{align*}
+	Esto quiere decir que la aplicación $\Omega^2(S) \rightarrow \mathbb{K}^{|C|}$ desciende a una aplicación sobreyectiva $\Omega^2(S) \rightarrow \coker d_2 = H^2(\Delta, \mathbb{K})$.
+	
+	Definimos ahora nuestro isomorfismo $I$ precisamente como la aplicación inducida en el cociente
+	\begin{align*}
+	  I :H^2(S,\mathbb{K}) &\longrightarrow H^2(\Delta, \mathbb{K}).
+	  \end{align*}
+	  Falta probar ahora que $I$ es inyectiva. Para ello, tan sólo hemos de verificar que la $2$-forma $\omega_f$ que hemos definido antes es equivalente en cohomología a la forma $\omega$ de partida. Tomemos entonces $\omega$ y las correspondientes $\alpha_u$ tales que $d\alpha_u = \omega |_{U_u}$ y $f_{uv}$, con $df_{uv} = \alpha_u - \alpha_v$, y definamos, en cada $U_u$,
+	  \begin{equation*}
+	    \gamma_u = \alpha_u - \sum_{v \in \partial U_u} f_{uv(v+1)} h_v dh_{v+1} - \sum_{w \in \partial U_u} d(f_{uw} h_w).
+	  \end{equation*}
+Ahora,
+\begin{align*}
+  \gamma_u|_{U_v} &= \alpha_u|_{U_v} - \sum_{w,\ uvw\in C} [f_{uvw} dh_w + d(f_{uw} h_w)] =\alpha_u|_{U_v} - \sum_{w,\ uvw\in C} d(f_{uw}h_w)
+\end{align*}
+ya que $\sum_{w, \ uvw \in C} dh_w = 0$.
+Pero entonces,
+\begin{align*}
+  \gamma_u|_{U_v} & =\alpha_u|_{U_v} - \sum_{w,\ uvw\in C} d(f_{uw}h_w) = \alpha_u|_{U_v} - \sum_{w, \ uvw \in C} d(f_{uv}h_w + f_{vw}h_w - f_{uvw}h_w) \\
+  & =\alpha_u|_{U_v} - \sum_{w, \ uvw \in C} [h_w df_{uv} + f_{uv} dh_w + d(f_{vw} h_w)] \\ & = \alpha_{u}|_{U_v} - df_{uv} - \sum_{w, \ uvw \in C}d(f_{vw} h_w) = \alpha_v|_{U_u} - \sum_{w, \ uvw \in C}d(f_{vw} h_w) = \gamma_v|_{U_u}.
+\end{align*}
+
+De modo que podemos pegar las $\gamma_u$ para dar una $1$-forma global $\gamma \in \Omega^1(S)$. Además, como
+\begin{equation*}
+  d\gamma_u = d \alpha_u - \sum_{v \in \partial U_u} f_{uv(v+1)} d\theta_v \wedge d\theta_{v+1} = \omega|_{U_u} - \omega_f|_{U_u},
+\end{equation*}
+tenemos que $\omega = \omega_f + d\gamma$, o lo que es lo mismo, $[\omega]=[\omega_f]$.
+	
+Finalmente, veamos que $\Sigma I(\omega) = \int_S \omega$. Como ya hemos visto que $I$ es un isomorfismo, equivalentemente podemos probar que $\int_S \omega_f = \Sigma f$. En efecto,
+\begin{align*}
+  \int_S \omega_f &= \sum_{uvw \in C} \int_{U_u} f_{uvw} d\theta_v \wedge d\theta_w = \sum_{u \in V} \int_{U_u} d\left( \sum_{v \in \partial U_u} f_{uv(v+1)} \theta_v d\theta_{v+1} \right) \\
+  &= \sum_{u \in V} \int_{\partial U_u} \sum_{v \in \partial U_u} f_{uv(v+1)} \theta_v d\theta_{v+1} = \sum_{u \in V} \sum_{v \in \partial U_u} \left( \int_v^{v+1} f_{uv(v+1)} d\theta_{v+1} \right) \\
+  &=  \sum_{u \in V} \sum_{v \in \partial U_u} f_{uv(v+1)} (\theta_{v+1}(v+1) - \theta_{v+1}(v)) = \sum_{u \in V} \sum_{v \in \partial U_u} f_{uv(v+1)} = \sum_{uvw \in C} f_{uvw},
+\end{align*}
+como queríamos demostrar.
+    \end{proof}
+  
+
+\section{Superficies de Riemann}
+
+\subsection{El concepto}
+\begin{defn}
+  Una \emph{superficie de Riemann} es una terna $(S,\mathfrak{U},\Phi)$, donde $S$ es una superficie topológica conexa, $\mathfrak{U}$ es un recubrimiento por abiertos de $S$ y $$\Phi=\{\phi_U: U\in \mathfrak{U}\}$$ es un conjunto de aplicaciones tales que:
+  \begin{enumerate}
+    \item cada $\phi_U:U\rightarrow \CC$ es un homeomorfismo sobre un subconjunto abierto de $\CC$, y
+    \item las funciones $\phi_U \circ \phi_V^{-1}: \phi_V(U\cap V) \rightarrow \phi_U(U\cap V)$ son holomorfas.
+  \end{enumerate}
+
+  Un par de la forma $(U,\phi_U)$, para $U\in \mathfrak{U}$, se llama un \emph{sistema de coordenadas holomorfas}.
+\end{defn}
+
+Dada una superficie de Riemann $X=(S,\mathfrak{U},\Phi)$, decimos que una función $f:X\rightarrow \CC$ es \emph{holomorfa} en un punto $p \in S$ si existe un abierto $U\in \mathfrak{U}$, con $p\in U$, tal que $f\circ \phi_U^{-1}:\phi_U(U) \rightarrow \CC$ es holomorfa en el punto $\phi_U(p) \in \CC$. Decimos que $f$ es holomorfa en un subconjunto $A\subset S$ si es holomorfa en $p$ para todo $p\in A$. Denotamos por $\OO_X(A)$ el conjunto de funciones holomorfas en $A$. Definimos el \emph{haz de estructura} $\OO_X$ de $X$, como el functor que asocia a cada abierto $U$ de $X$ el conjunto $\OO_X(U)$ y a cada inclusión $V\subset U$ el homomorfismo de restricción $\OO_X(U)\rightarrow \OO_X(V)$.
+
+\begin{defn}
+  Sean $S$ y $T$ dos espacios topológicos, $f:S\rightarrow T$ una función continua y $\mathscr{F}$ un haz en $S$. Definimos el haz imagen directa $f_*\mathscr{F}$ sobre $T$ como 
+  \begin{equation*}
+    f_*\mathscr{F}(U)=\mathscr{F}(f^{-1}(U)),
+  \end{equation*}
+  para cada $U\subset T$.
+\end{defn}
+
+\begin{defn}
+  Una \emph{estructura compleja} en una superficie topológica $S$ es un subhaz $\OO_X$ del haz $C_S(-,\CC)$ de funciones continuas en $S$ con valores en $\CC$ tal que existe un recubrimiento por abiertos $\mathfrak{U}$ de $X$ y un conjunto $\Phi={\phi_U:U\in \mathfrak{U}}$ de aplicaciones tales que:
+  \begin{enumerate}
+    \item cada $\phi_U:U\rightarrow \CC$ es un homeomorfismo sobre un subconjunto abierto de $\CC$, y
+    \item para cada $U\in \mathfrak{U}$, $\phi_{U,*}(\OO_X|_U)= \OO_{\phi_U(U)}$.
+  \end{enumerate}
+\end{defn}
+
+Claramente, si $X=(S,\mathfrak{U},\Phi)$ es una superficie de Riemann, entonces el haz de estructura $\OO_X$ es una estructura compleja en $S$, ya que por definición, $f\in \OO_X|_U(V)$ si y sólo si $f\circ \phi_U^{-1} \in \OO_{\phi_U(U)}(\phi_U(V))$.
+
+Por otra parte, si $\OO_X$ es una estructura compleja en una superficie topológica $S$, ésta tiene asociada un recubrimiento $\mathfrak{U}$ y un conjunto de aplicaciones $\Phi$, de modo que la terna $(S,\mathfrak{U},\Phi)$ es una superficie de Riemann. En efecto, como $\phi_U \circ \phi_U^{-1}=\id$, que es holomorfa, tenemos que $\phi_U \circ \phi_U^{-1} \in \OO_{\phi_U(U)}(\phi_U(U\cap V))$. Por hipótesis, $\OO_{\phi_U(U)} = \phi_{U,*}(\OO_X|_U)$, de modo que $\phi_U \in \OO_X(U\cap V)$. De nuevo por la hipótesis, $\phi_{V,*}(\OO_X|_V) = \OO_{\phi_V(V)}$, luego $\phi_U \circ \phi_V^{-1} \in \OO_{\phi_V(V)}(\phi_V(U\cap V))$.
+
+Por tanto, podemos redefinir una superficie de Riemann en la siguiente forma:
+
+\begin{defn}
+  Una superficie de Riemann es un par $X=(S,\OO_X)$, con $S$ una superficie topológica y $\OO_X$ una estructura compleja en $S$.
+\end{defn}
+
+Por abuso de notación, salvo que se especifique lo contrario, en general usaremos $X$ tanto para denotar una superficie de Riemann, como para la superficie topológica subyacente.
+
+\subsection{El espacio tangente}
+Sea $X$ una superficie de Riemann y $p\in X$ un punto. Definimos el \emph{conjunto de gérmenes de funciones holomorfas en $p$} como $\OO_{X,p}$ la espiga del haz $\OO_X$ en el punto $p$.
+
+\begin{defn}
+  Definimos el \emph{espacio tangente holomorfo a $X$ en $p$}, denotado $\boldsymbol{T}_pX$, como el espacio de las derivaciones en $\OO_{X,p}$; esto es, las aplicaciones $\CC$-lineales $D:\OO_{X,p}\rightarrow \CC$ que satisfacen la \emph{regla de Leibniz}:
+
+  \begin{equation*}
+    D(fg)=D(f)g(p) + f(p) D(g),
+  \end{equation*}
+  para cualesquiera $f,g \in \OO_{X,p}$. 
+\end{defn}
+
+\begin{obs}
+ Nótese que, si $1$ es el germen de la función constante $1$, entonces, por la regla de Leibniz, $D(1)= D(1) + D(1)$, luego $D(1)=0$ y, en general, para cualquier función constante $c$, $D(c)=0$.
+\end{obs}
+
+Sea $(U,\phi_U)$ un sistema de coordenadas holomorfas con $p\in U$. Puesto que $\phi_{U,*}(\OO_X|_U)= \OO_{\phi_U(U)}$, tenemos que la asignación $f\mapsto f\circ \phi^{-1}$ da un isomorfismo entre $\OO_{X,p}$ y $\OO_{\CC,z_0}$, para $z_0=\phi_U(p)$.
+
+\begin{prop}
+  El conjunto $\OO_{\CC,z_0}$ es isomorfo a $\CC\{z\}$, el conjunto de series de potencias con coeficientes complejos en la variable $z$ con radio de convergencia positivo.
+\end{prop}
+
+\begin{proof}
+  Si $f\in \OO_{\CC,z_0}$ es un germen de función holomorfa en $z_0$, entonces existe un entorno $U\subset \CC$ de $z_0$ y una función holomorfa $f_U\in \OO_{\CC}(U)$ representando a $U$. Las funciones holomorfas son analíticas, de modo que, si $T_{z_0} f_U (z) = \sum_{n=0}^\infty a_n (z-z_0)^n$ es el desarrollo de Taylor de $f_U$ en $z_0$, existe un $r>0$ tal que, para todo $z \in \CC$, con $|z-z_0|<r$, $T_{z_0} f_U (z) = f(z)$.
+
+  Así, a cada $f\in \OO_{\CC,z_0}$ le podemos asignar la correspondiente serie de potencias $\sum_{n=0}^\infty a_n z^n \in \CC\{z\}$. Esta asignación es inyectiva, ya que si los desarrollos en serie de dos funciones analíticas coindicen en un punto, entonces estas coinciden en un abierto. La asignación es sobreyectiva, ya que para cada serie $\sum_{n=0}^\infty a_n z^n \in \CC\{z\}$ podemos definir la función $f(z) = \sum_{n=0}^\infty a_n (z-z_0)^n$, que es holomorfa al menos en el disco de convergencia de la serie.
+\end{proof}
+
+Ahora, si $f=\sum_{n=0}^\infty a_n z^n \in \CC\{z\}$ es una serie de potencias convergente y $D$ es una derivación de $\CC\{z\}$, tenemos
+\begin{equation*}
+  D (f) =  a_1 D(z) + \sum_{n=2}^\infty a_n D(z^n).
+\end{equation*}
+Pero, para $n\geq 2$,
+
+\begin{equation*}
+  D(z^n) = D(z) z^{n-1}|_{z=0} + z|_{z=0} D(z^{n-1}) = 0.
+\end{equation*}
+Por tanto, $D(f) = a_1 D(z)$. Nótese que el coeficiente $a_1$ es igual a la derivada $f'(0)$. Por tanto, la derivación $f\mapsto f'(0)$ es una base del espacio de derivaciones de $\CC\{z\}$.
+
+Más generalmente, el espacio de derivaciones de $\OO_{\CC,z_0}$ está generado por la derivación
+\begin{align*}
+  \partial_z|_{z_0} :\OO_{\CC,z_0} &\longrightarrow \CC \\ 
+  f &\longmapsto \frac{\partial f}{\partial z}(z_0). 
+  \end{align*}
+  En conclusión, el espacio tangente holomorfo $\boldsymbol{T}_pX$ es un espacio vectorial complejo de dimensión (compleja) $1$ generado por la derivación 
+\begin{align*}
+  \OO_{X,p} &\longrightarrow \CC \\ 
+  f &\longmapsto \frac{\partial (f\circ \phi_U^{-1})}{\partial z}(z_0). 
+  \end{align*}
+
+  Toda función holomorfa $f:D\subset \CC \rightarrow \CC$ definida en un dominio $D\subset \CC$ es en particular una aplicación diferenciable $f:\RR^2 \rightarrow \RR^2$, de modo que una estructura compleja $\OO_X$ en una superficie topológica $S$ la dota en particular de una estructura de variedad diferenciable de dimensión $2$. Como tal, en cada punto $p\in S$, la superficie $S$ tiene un espacio tangente «diferenciable», que denotamos por $T_pS$. Si $(U,\phi_U)$ es un sistema de coordenadas holomorfas con $p\in U$ y escribimos $\phi_U(p)=z_0=x_0+iy_0$, es fácil ver, por un razonamiento análogo al anterior, que $T_pX$ es un espacio vectorial real de dimensión $2$ generado por las derivaciones $\partial_x|_p$ y $\partial_y|_p$. 
+
+  Para relacionar $T_pS$ con $\boldsymbol{T}_p X$, consideramos la complexificación
+
+  \begin{equation*}
+    T_pS_{\CC} = T_p S \otimes_{\RR} \CC,
+  \end{equation*}
+  e introducimos las derivaciones
+  \begin{equation*}
+    \partial_z|_p = \tfrac{1}{2}(\partial_x|_p - i \partial_y|_p), \ \ \partial_{\bar{z}}|_p = \tfrac{1}{2} (\partial_x|_p + i \partial_y|_p).
+  \end{equation*}
+  Esto nos da una descomposición
+  \begin{equation*}
+    T_p S_\CC = T_p^{1,0} X \oplus T_p^{0,1} X,   
+  \end{equation*}
+  donde $T_p^{1,0}X$ es el subespacio generado por $\partial_z|_p$ y $T_p^{0,1} X$ el generado por $\partial_{\bar{z}}|_p$. 
+
+  Si consideramos ahora una aplicación diferenciable $f:X\rightarrow \CC$ de la forma
+  \begin{align*}
+    f\circ \phi_U^{-1} :\CC &\longrightarrow \CC\\ 
+      x+iy &\longmapsto u(x,y) + i v(x,y), 
+    \end{align*}
+    tenemos
+    \begin{align*}
+      \partial_{\bar{z}}|_p f &= \frac{1}{2} \left[ \left( \frac{\partial u}{\partial x}(z) + i \frac{\partial v}{\partial x}(z) \right) + i\left( \frac{\partial u}{\partial y}(x) + i \frac{\partial v}{\partial y}(z) \right) \right] \\
+ &= \frac{1}{2} \left[ \left( \frac{\partial u}{\partial x}(z) -  \frac{\partial v}{\partial y}(z) \right) + i\left( \frac{\partial u}{\partial y}(x) +  \frac{\partial v}{\partial x}(z) \right) \right].
+    \end{align*}
+    Ahora, si $f$ es también holomorfa en $p$, debe satisfacer las ecuaciones de Cauchy-Riemann
+    \begin{align*}
+      \begin{cases}
+      \dfrac{\partial u}{\partial x}(z) = \dfrac{\partial v}{\partial y}(z), \\
+      \dfrac{\partial u}{\partial y}(z) = -\dfrac{\partial v}{\partial x}(z).
+      \end{cases}
+    \end{align*}
+    Por tanto, tenemos que $\partial_{\bar{z}}|_p f = 0$. Concluimos entonces que 
+    \begin{equation*}
+      \boldsymbol{T}_p X = T^{1,0}_p X = \Span(\partial_z|_p).
+    \end{equation*}
+
+    \begin{obs}
+      Nótese que denotamos $T_p^{1,0}X$ y no $T_p^{1,0}S$, ya que para que la descomposición varíe de forma holomorfa con el punto es crucial la existencia de la estructura holomorfa $X$. Puede tratarse de definir una estructura compleja a partir de una descomposición de este tipo. Para ello se considera el \emph{fibrado tangente} de $S$:
+      \begin{equation*}
+	TS = \{(p,v) : p \in S, v\in T_p S\},
+      \end{equation*}
+      (este es un ejemplo de \emph{fibrado vectorial}, que estudiaremos más adelante), y se considera un endomorfismo $J:TS \rightarrow TS$ con $J^2=-\id_{TS}$. La descomposición en autoespacios permite escribir $TS= T^{1,0} S \oplus T^{0,1} S$, donde la parte $(1,0)$ corresponde al autovalor $i$ y la parte $(0,1)$ al autovalor $-i$. Una $J$ de esta forma se llama una \emph{estructura casi compleja} en $S$. El teorema de Newlander--Niremberg afirma que una estrucutra casi compleja en una superficie $S$ define una estructura compleja.
+    \end{obs}
+
+    \subsection{Formas diferenciales}
+    Supongamos que $X=(S,\OO_X)$ es una superficie de Riemann y $p\in S$ es un punto. Tomemos también $(U,\phi_U)$ un sistema de coordenadas holomorfas con $p \in U$. Podemos considerar el dual del espacio tangente, $T^*_p S$, que llamamos el \emph{espacio cotangente} a $S$ en $p$. Si complexificamos también este espacio, obtenemos el espacio $T^*_pS_{\CC} = T^*_p S \otimes_\RR \CC$, que está generado por los elementos duales de la base $\{\partial_z|_p, \partial_{\bar{z}}|_p\}$, que denotamos por $\{dz_p, d\bar{z}_p\}$. 
+
+    De esta forma, a partir del conjunto de $1$-formas diferenciales en $U$ con valores en $\RR$, que denotamos por $\Omega^1(U,\RR)$, podemos definir el conjunto de \emph{$1$-formas diferenciales en $U$ con valores en $\CC$},
+    \begin{equation*}
+      \Omega^1(U)=\Omega^1(U,\CC) = \Omega^1(U,\RR) \otimes \CC.
+    \end{equation*}
+    Igual que hicimos con el espacio tangente, podemos descomponer $T^*_p S_\CC = (T_p^{1,0}X) ^* \oplus (T_p^{0,1})^*$, de modo que obtenemos
+    \begin{equation*}
+      \Omega^1(U)=\Omega^{1,0}(U) \oplus \Omega^{0,1}(U).
+    \end{equation*}
+    Equivalentemente, lo que estamos diciendo es que cualquier $1$-forma compleja $\omega\in \Omega^1(U)$ puede escribirse como
+    \begin{equation*}
+      \omega= \omega_{1,0} dz + \omega_{0,1}d\bar{z},
+    \end{equation*}
+    con $\omega_{1,0},\omega_{0,1}:U \rightarrow \CC$ funciones diferenciables.
+
+    Tomando potencias exteriores, podemos extender esta descomposición a formas de grado superior, de modo que obtenemos
+    \begin{equation*}
+      \Omega^k(U) = \bigoplus_{p+q=k} \Omega^{p,q}(U),
+    \end{equation*}
+    con 
+    \begin{equation*}
+      \Omega^{p,q}(U)= \left( \wedge^p \Omega^{1,0}(U) \right) \wedge \left( \wedge^q \Omega^{0,1}(U) \right).
+    \end{equation*}
+    En cualquier caso, como $S$ es una superficie (es decir, tiene dimensión $2$ como variedad diferenciable), tenemos que $\Omega^k(U)=0$ para $k>2$. Así, el único caso no trivial que nos queda por estudiar en esta situación es el de las $2$-formas,
+    \begin{equation*}
+      \Omega^2(U)= \Omega^{2,0}(U) \oplus \Omega^{1,1}(U) \oplus \Omega^{0,2}(U)= \Omega^{1,1}(U),
+    \end{equation*}
+    ya que $dz\wedge dz = 0$ y $d\bar{z} \wedge d\bar{z}= 0$. Esto es, cualquier $2$-forma $\omega \in \Omega^2(U)$ puede escribirse como
+    \begin{equation*}
+      \omega = \omega_{1,1} dz \wedge d\bar{z},
+    \end{equation*}
+    con $\omega_{1,1}:U\rightarrow \CC$ una función diferenciable.
+
+    Esta descomposición resulta también en una escisión de la diferencial exterior $d:\Omega^k(U) \rightarrow \Omega^{k+1}(U)$. Para una $0$-forma $f\in \Omega^0(U)=C^\infty(U,\CC)$, tenemos
+    \begin{equation*}
+      df = \partial_ zf  dz + \partial _{\bar{z}} f d\bar{z}.
+    \end{equation*}
+    Podemos definir entonces los operadores
+    \begin{align*}
+      \partial :\Omega^0(U)&\longrightarrow \Omega^{1,0}(U)\\ 
+        f &\longmapsto \partial_z f dz, 
+      \end{align*}
+      y
+    \begin{align*}
+      \delbar :\Omega^0(U)&\longrightarrow \Omega^{0,1}(U)\\ 
+      f &\longmapsto \partial_{\bar{z}} f d\bar{z}, 
+      \end{align*}
+      de modo que
+      \begin{equation*}
+	df = \partial f + \delbar f.
+      \end{equation*}
+      Para una $1$-forma $\omega=\omega_{1,0} dz + \omega_{0,1} d\bar{z}$, tenemos
+      \begin{equation*}
+	d\omega = \partial_{\bar{z}} \omega_{1,0} d\bar{z} \wedge dz + \partial_z \omega_{0,1} dz \wedge d\bar{z} = (\partial_{z} \omega_{0,1}-\partial_{\bar{z}} \omega_{1,0}) dz\wedge d\bar{z}.
+      \end{equation*}
+      Podemos definir los operadores
+      \begin{align*}
+	\partial :\Omega^{1,0}(U)&\longrightarrow \Omega^{1,1}(U)\\ 
+	\omega_{1,0} dz &\longmapsto \partial_{\bar{z}} \omega_{1,0}d\bar{z} \wedge dz 
+	\end{align*}
+	y
+      \begin{align*}
+	\delbar :\Omega^{0,1}(U)&\longrightarrow \Omega^{1,1}(U)\\ 
+	\omega_{0,1} d\bar{z} &\longmapsto \partial_{z} \omega_{0,1} d\bar{z} \wedge dz ,
+	\end{align*}
+	y las proyecciones
+	\begin{align*}
+	  \pr_{1,0} :\Omega^1(U)&\longrightarrow \Omega^{1,0}(U)\\ 
+	  \omega_{1,0}dz + \omega_{0,1} d\bar{z} &\longmapsto \omega_{1,0}dz 
+	  \end{align*}
+	  y
+	\begin{align*}
+	  \pr_{0,1} :\Omega^1(U)&\longrightarrow \Omega^{0,1}(U)\\ 
+	  \omega_{1,0}dz + \omega_{0,1} d\bar{z} &\longmapsto \omega_{0,1}d\bar{z}, 
+	  \end{align*}
+	  de modo que
+	  \begin{equation*}
+	    d\omega = \delbar \pr_{1,0} \omega + \partial \pr_{0,1} \omega.
+	  \end{equation*}
+
+	  
+	  Diagramáticamente, tenemos
+	  
+	  \begin{center}      
+	    \begin{tikzcd}
+	        \Omega^0(U) \arrow{r}{d} & \Omega^1(U) \arrow{r}{d} & \Omega^2(U) \arrow{r}{d} & 0 	\\ 	  & \Omega^{1,0}(U)\arrow{rd}{\bar{\partial}}\arrow[bend left]{rrd}{\partial} & & \\	  \Omega^{0,0}(U) \arrow{ru}{\partial} \arrow{rd}{\bar{\partial}} & &  \Omega^{1,1}(U) \arrow[shift left]{r}{\partial}  \arrow[shift right]{r}[anchor=north]{\bar{\partial}}& 0.\\	  & \Omega^{0,1}(U)\arrow{ru}{\partial} \arrow[bend right]{rru}{\bar{\partial}} & &       \end{tikzcd}    \end{center}
+
+	  Nótense en particular los segmentos
+\begin{center}  \begin{tikzcd}   
+    
+    \Omega^{0}(U) \arrow{r}{\bar{\partial}} & \Omega^{0,1}(U) \arrow{r}{\bar{\partial}} & 0, \\
+    \Omega^{1,0}(U) \arrow{r}{\bar{\partial}} & \Omega^{1,1}(U) \arrow{r}{\bar{\partial}} & 0.  \end{tikzcd}\end{center}
+El conjunto $\ker(\delbar:\Omega^0(U) \rightarrow \Omega^{0,1}(U))$ consiste precisamente en las funciones holomorfas en $U$. Por otra parte, podemos considerar el conjunto de las \emph{$1$-formas diferenciales holomorfas en $U$}:
+\begin{equation*}  \boldsymbol{\Omega}^1(U) = \ker(\bar{\partial}: \Omega^{1,0} \rightarrow \Omega^{1,1}).\end{equation*}
+Concretamente, un elemento en $\boldsymbol{\Omega}^1(U)$ es de la forma
+
+\begin{equation*}  \omega dz,\end{equation*} con $\omega:U\rightarrow \CC$ una función holomorfa (de modo que $\partial_{\bar{z}}\omega=0$).
+
+Ahora, tenemos el siguiente resultado:
+
+\begin{prop}[Lema de Poincaré para el operador $\bar{\partial}$]  Sea $D\subset \CC$ un disco abierto y $\omega \in C^\infty(\bar{D})$ una función. La función  \begin{equation*}    \alpha(z) = \frac{1}{2\pi i}\int_D \frac{\omega(w)}{w-z} dw \wedge d\bar{w},  \end{equation*}  está en $C^\infty(D)$ y satisface  \begin{equation*}    \frac{\partial \alpha}{\partial \bar{z}}=\omega.  \end{equation*}\end{prop}
+
+Como consecuencia, para cada $\omega d\bar{z} \in \Omega^{1,0}(U)$ y para cada $\omega d\bar{z}\wedge dz \in \Omega^{1,1}(U)$ podemos tomar un subconjunto  $D \subset U$ homeomorfo a un disco abierto y la función \begin{equation*}    \alpha(z) = \frac{1}{2\pi i}\int_D \frac{\omega(w)}{w-z} dw \wedge d\bar{w}  \end{equation*}  satisface $\partial_{\bar{z}} \alpha = \omega$, de modo que \begin{equation*}  \omega d\bar{z} = \delbar{\alpha} \ \ \text{ y } \ \   \omega d\bar{z}\wedge dz = \bar{\partial}(\alpha dz),  \end{equation*} en $D$. En conclusión, las aplicaciones $\delbar:\Omega^0(D)\rightarrow \Omega^{0,1}(D)$ y $\bar{\partial}:\Omega^{1,0}(D) \rightarrow \Omega^{1,1}(D)$ son sobreyectivas y las sucesiones  \begin{center}    \begin{tikzcd} 
+               0 \arrow{r}& \OO_X(D) \arrow[hook]{r}& \Omega^{0}(D) \arrow{r}{\bar{\partial}} & \Omega^{0,1}(D) \arrow{r}{\bar{\partial}} & 0   \\
+    0 \arrow{r}& \boldsymbol{\Omega}^1(D) \arrow[hook]{r}& \Omega^{1,0}(D) \arrow{r}{\bar{\partial}} & \Omega^{1,1}(D) \arrow{r}{\bar{\partial}} & 0    \end{tikzcd}  \end{center}  son exactas.
+
+\begin{proof}
+  Hacer la DEMO (Griffiths-Harris).
+\end{proof}
+
+Globalmente, podemos considerar los haces $\Omega^k_S$, definidos por $\Omega^k_S(U)=\Omega^k(U)$. El conjunto de secciones globales $\Omega^k(X)=\Omega^k_S(S)$ es el conjunto de las $k$-formas diferenciales en $S$ con valores en $\CC$. Análogamente, podemos globalizar las mismas descomposiciones y operadores y obtenemos los haces de $(p,q)$-formas $\Omega^{p,q}_X$ y el haz de $1$-formas holomorfas $\boldsymbol{\Omega}^1_X$.
+
+Obtenemos también un diagrama análogo
+
+\begin{center}	    \begin{tikzcd}
+      \Omega^0_S \arrow{r}{d} & \Omega^1_S \arrow{r}{d} & \Omega^2_S \arrow{r}{d} & 0 	\\ 	  & \Omega^{1,0}_X\arrow{rd}{\bar{\partial}}\arrow[bend left]{rrd}{\partial} & & \\	  \Omega^{0,0}_X \arrow{ru}{\partial} \arrow{rd}{\bar{\partial}} & &  \Omega^{1,1}_X \arrow[shift left]{r}{\partial}  \arrow[shift right]{r}[anchor=north]{\bar{\partial}}& 0.\\	&   \Omega^{0,1}_X\arrow{ru}{\partial} \arrow[bend right]{rru}{\bar{\partial}} & &       \end{tikzcd}    \end{center}
+
+  Teniendo en cuenta las sucesiones exactas anteriores, obtenemos las sucesiones exactas
+ \begin{center}    \begin{tikzcd} 
+               0 \arrow{r}& \OO_X \arrow[hook]{r}& \Omega^{0,0}_X \arrow{r}{\bar{\partial}} & \Omega^{0,1}_X \arrow{r}{\bar{\partial}} & 0   \\
+    0 \arrow{r}& \boldsymbol{\Omega}^1_X \arrow[hook]{r}& \Omega^{1,0}_X \arrow{r}{\bar{\partial}} & \Omega^{1,1}_X \arrow{r}{\bar{\partial}} & 0.    \end{tikzcd}  \end{center}
+En general, sin embargo, al tomar secciones globales obtenemos los complejos de cadenas
+ \begin{center}    \begin{tikzcd} 
+               0 \arrow{r}& \OO_X(X) \arrow[hook]{r}& \Omega^{0,0}(X) \arrow{r}{\bar{\partial}} & \Omega^{0,1}(X) \arrow{r}{\bar{\partial}} & 0   \\
+    0 \arrow{r}& \boldsymbol{\Omega}^1(X) \arrow[hook]{r}& \Omega^{1,0}(X) \arrow{r}{\bar{\partial}} & \Omega^{1,1}(X) \arrow{r}{\bar{\partial}} & 0,    \end{tikzcd}  \end{center}
+que no son necesariamente exactos. 
+
+\begin{defn}
+  Se definen los \emph{grupos de cohomología de Dolbeaut} como
+  \begin{align*}
+    H^{0,0}(X)&=\ker(\delbar:\Omega^{0,0}(X) \rightarrow \Omega^{0,1}(X)), \\
+    H^{1,0}(X)&=\ker(\delbar:\Omega^{1,0}(X) \rightarrow \Omega^{1,1}(X)), \\
+    H^{0,1}(X)&=\coker(\delbar:\Omega^{0,0}(X) \rightarrow \Omega^{0,1}(X)), \\
+    H^{1,1}(X)&=\coker(\delbar:\Omega^{1,0}(X) \rightarrow \Omega^{1,1}(X)) .
+  \end{align*}
+\end{defn}
+
+Como tomar secciones globales sí que respeta la exactitud por la izquierda, acabamos de ver que
+\begin{align*}
+  H^{0,0}(X) & \cong \OO_X(X), \\
+  H^{1,0}(X) & \cong \boldsymbol{\Omega}^1 (X).
+\end{align*}
+Por otra parte, podemos dar un resultado análogo al teorema de de Rham en esta situación:
+
+\begin{thm}[Dolbeaut]
+  \begin{align*}
+    H^{0,1}(X) &= H^1(X,\OO_X), \\
+    H^{1,1}(X) &= H^1(X,\boldsymbol{\Omega}^1_X).
+  \end{align*}
+\end{thm}
+
+\begin{proof}
+  Hagamos la demostración para $H^{0,1}(X)$, siendo la otra completamente análoga. La clave está en que los haces $\Omega_X^{p,q}$, en tanto que consisten en formas diferenciales \emph{diferenciables}, admiten particiones diferenciables de la unidad. Por tanto, $H^1(X,\Omega^{0,0}_X)=0$. En consecuencia, si tomamos la sucesión exacta larga en cohomología asociada a la sucesión exacta corta
+ \begin{center}    \begin{tikzcd} 
+               0 \arrow{r}& \OO_X \arrow[hook]{r}& \Omega^{0,0}_X \arrow{r}{\bar{\partial}} & \Omega^{0,1}_X \arrow{r}{\bar{\partial}} & 0,   
+     \end{tikzcd}  \end{center}
+   obtenemos la sucesión exacta
+   \begin{center}
+     \begin{tikzcd}
+       0 \rar & \OO_X(X) \rar & \Omega^{0,0}(X) \arrow{r}{\delbar} & \Omega^{0,1}(X) \rar & H^1(X,\OO_X) \rar & 0,
+     \end{tikzcd}
+   \end{center}
+   de donde se deduce que
+   \begin{equation*}
+     H^1(X,\OO_X) = \coker(\delbar) = H^{0,1}(X).
+   \end{equation*}
+   Análogamente para $\boldsymbol{\Omega}^1_X$.
+\end{proof}
+
+\subsection{Teoría de Hodge}
+\begin{defn}
+  Sea $X$ una superficie de Riemann, definimos el operador \emph{laplaciano} como
+  \begin{equation*}
+    \Delta = 2i \delbar \partial: \Omega^{0,0} \rightarrow \Omega^{1,1}.
+  \end{equation*}
+\end{defn}
+
+En coordenadas locales, tenemos
+\begin{equation*}
+  \Delta f = -2i \tfrac{1}{4} (\partial_x + i \partial_y)(\partial_x - i \partial_y) f (dz\wedge d\bar{z})  = - (\partial_x^2  + \partial_y^2 ) f dx \wedge dy,
+\end{equation*}
+ya que
+\begin{equation*}
+  dz \wedge d\bar{z} = (dx+idy) \wedge (dx - idy) = -idx\wedge dy + i dy \wedge dx = -idx\wedge dy.
+\end{equation*}
+Esto justifica el uso del nombre \emph{laplaciano} para el operador $\Delta$. 
+
+Enunciamos ahora el primero de los teoremas de existencia que veremos en estas notas. Daremos la demostración en la sección final, dedicada a los teoremas de existencia.
+
+\begin{thm}[Hodge]
+  Sea $X$ una superficie de Riemann compacta y $\rho$ una $2$-forma en $X$. Existe una solución a la ecuación $$\Delta f=\rho$$
+  si y sólo si $\int_X \rho = 0.$
+  En tal caso, la solución $f$ es única salvo una constante.
+\end{thm}
+
+Este teorema tiene una serie de consecuencias sobre la cohomología de Dolbeaut de las superficies de Riemann compactas. En primer lugar, nótese que tenemos las siguientes aplicaciones definidas de forma natural:
+\begin{itemize}
+  \item Una aplicación $\sigma: H^{1,0}(X) \rightarrow \overline{H^{0,1}(X)}$ inducida por la aplicación $\omega \mapsto \bar{\omega}$.
+  \item Una aplicación bilineal
+    \begin{align*}
+      B :H^{1,0}(X) \times H^{0,1}(X) &\longrightarrow \CC,
+      \end{align*}
+      definida por
+      \begin{equation*}
+	B(\alpha,[\theta]) = \int_X \alpha \wedge \theta.
+      \end{equation*}
+      Esta aplicación está bien definida ya que si cambiamos $\theta$ por $\theta+ \delbar f$, la integral cambia por
+      \begin{equation*}
+	\int_X \alpha \wedge \delbar f = \int_X -\delbar(f \alpha) + f\delbar \alpha=-\int_X \delbar(f\alpha)=0,
+      \end{equation*}
+      por el teorema de Stokes.
+
+    \item Una aplicación $i:H^{1,0}(X) \rightarrow H^1(X,\CC)$ que envía cada $1$-forma holomorfa a su clase de cohomología de de Rham.
+
+    \item Una aplicación $\nu: H^{1,1}(X) \rightarrow H^2(X,\CC)$ inducida por la inclusión
+      \begin{equation*}
+	\im(\delbar: \Omega^{1,0}(X) \rightarrow \Omega^{1,1}(X)) \subset \im(d:\Omega^1(X)\rightarrow \Omega^2(X)).
+      \end{equation*}
+\end{itemize}
+
+      Obtenemos ahora la siguiente consecuencia del teorema de Hodge:
+      \begin{corol}
+	Sea $X$ una superficie de Riemann compacta.
+	\begin{enumerate}
+	  \item La aplicación $\sigma$ es un isomorfismo $H^{1,0}(X) \cong \overline{H^{0,1}(X)}$.
+	  \item La aplicación
+	    \begin{align*}
+	      H^{1,0}(X) \oplus H^{0,1}(X)&\longrightarrow H^1(X,\CC)\\ 
+	      (\alpha,\theta) &\longmapsto i(\alpha) + i(\sigma^{-1}(\bar{\theta})), 
+	      \end{align*}
+	      es un isomorfismo. El isomorfismo $H^1(X,\CC)=H^{1,0}(X) \oplus H^{0,1}(X)$ se conoce como la \emph{descomposición de Hodge}. En consecuencia, $H^{1,0}(X)$ y $H^{0,1}(X)$ son espacios vectoriales complejos de dimensión finita $g$, el género de la superficie $X$.
+	  \item La aplicación $B$ induce un isomorfismo  $H^{0,1}(X) \cong (H^{1,0}(X))^*$. Este resultado se conoce como la \emph{dualidad de Serre}.
+	    \item La aplicación $\nu:H^{1,1}(X) \rightarrow H^2(X)$ es un isomorfismo. En particular, por ser $X$ compacta, componiendo con el isomorfismo
+	      \begin{align*}
+		 H^2(X)&\longrightarrow \CC \\ 
+		  \omega &\longmapsto  \int_X \omega,
+		\end{align*}
+		tenemos que $H^{1,1}(X)\cong \CC$.
+	\end{enumerate}
+      \end{corol}
+
+      \begin{proof} \ \\
+1.	Para ver que $\sigma$ es sobreyectiva tomamos una clase $[\theta] \in H^{0,1}(X)$. Queremos hallar un representante $\theta'=\theta + \delbar f$ tal que $\partial \theta'=0$, ya que, en tal caso $\delbar \bar{\theta'}=0$ y $[\theta]=-\sigma( \bar{\theta'})$. Se trata por tanto de resolver la ecuación
+	\begin{equation*}
+	  \partial \delbar f = -\partial \theta.
+	\end{equation*}
+	Como $\partial \delbar = \tfrac{i}{2} \Delta$, el teorema de Hodge garantiza que podemos resolver esta ecuación ya que, por el teorema de Stokes, $\int_X \partial \theta = 0$. 
+
+	La aplicación
+	\begin{equation*}
+	 \langle \alpha,\beta \rangle=  \int_X \alpha \wedge \bar{\beta},
+	\end{equation*}
+	con $\alpha, \beta \in H^{1,0}(X)$ es definida positiva ya que, si localmente $\alpha=adz$,
+	\begin{equation*}
+	  \lVert \alpha \rVert^2 = \int_X \alpha \wedge \bar{\alpha} = \int_X a \bar{a} dz \wedge d\bar{z} = \int_X  |a|^2 dz \wedge d\bar{z}.
+	\end{equation*}
+	En particular, si $\alpha \in H^{1,0}(X)$, entonces
+	\begin{equation*}
+	  B(\alpha,\sigma(\alpha)) = \lVert \alpha \rVert ^2,
+	\end{equation*}
+	que es distinto de $0$ si y sólo si $\alpha=0$. Esto prueba que $\sigma$ es inyectiva. \ \\
+	\ \\
+	2. En primer lugar, veamos que $i$ es inyectiva. Para ello, observemos que si $\alpha=df$ es una $1$-forma holomorfa, entonces $\alpha=\partial f$ por ser de tipo $(1,0)$ y $\delbar \alpha = 0$ por ser holomorfa. Esto implica que $\Delta f =0$ y, por el teorema de Hodge, $f$ es una función constante. Por tanto $\alpha = df =0$. En consecuencia, la aplicación del apartado 2 es inyectiva.
+
+	Por otra parte, toda $1$-forma $\alpha$ se descompone en tipos como $\alpha^{1,0} + \alpha^{0,1}$. Si $d\alpha =0$, entonces $\delbar \alpha^{1,0} =0$ y $\partial \alpha^{0,1}=0$. La segunda ecuación puede reescribirse como $\delbar \overline{\alpha^{0,1}} = 0$, de modo que
+	\begin{equation*}
+	  [\alpha] = i(\alpha^{1,0}) + i(\sigma^{-1}(\overline{\alpha^{0,1}})).
+	\end{equation*}
+	Ahora, $\dim_{\RR} H^1(X,\CC) = 2g$, y como $H^{1,0}(X)$ y $H^{0,1}(X)$ tienen la misma dimensión, ésta ha de ser igual a $g$. \ \\
+	\ \\
+	3. Como los espacios de cohomología de Dolbeaut son de dimensión finita, la fórmula $B(\alpha, \sigma(\alpha)) = \lVert \alpha \rVert ^2$ y el hecho de que $\sigma$ es un isomorfismo implican que $B$ es un emparejamiento perfecto y que por tanto induce un isomorfismo $H^{0,1}(X) \cong (H^{1,0}(X))^*$. \ \\
+	\ \\
+	4. Finalmente, claramente $\nu$ es sobreyectiva, ya que toda $2$-forma en una superficie de Riemann es una $(1,1)$-forma. Podemos ver que es inyectiva de nuevo por el teorema de Hodge. En efecto, si $\omega=d\alpha$, entonces ha de existir una $f$ tal que $\omega=\Delta f$. Por tanto, $\omega = \delbar(2i\partial f)$. Es decir, que si $\nu([\omega])=0$, entonces también $[\omega]=0$.
+      \end{proof}
+
+      \section{Fibrados y conexiones}
+      \subsection{Fibrados vectoriales}
+      \begin{defn}
+	Sea $S$ un espacio topológico Hausdorff. Un \emph{fibrado vectorial} (complejo) de \emph{rango} $n$ sobre $S$ es un espacio topológico Hausdorff $E$, junto con una aplicación $\pi:E\rightarrow S$ tal que:
+	\begin{enumerate}
+	  \item Las \emph{fibras} $E_p=\pi^{-1}(p)$, para cada $p\in S$, son $\CC$-espacios vectoriales de dimensión $n$.
+	  \item Existe un recubrimiento por abiertos $\UU$ de $X$ y, para cada $U\in \UU$, un homeomorfismo (llamado \emph{trivialización} de $E$ en $U$)
+	    \begin{equation*}
+	      \phi_U: E|_U \longrightarrow U \times \CC^n,
+	    \end{equation*}
+	    donde $E|_U$ denota $\pi^{-1}(U)$, de modo que el siguiente diagrama conmuta
+	    \begin{center}
+	      \begin{tikzcd}
+		E|_U  \arrow{r}{\phi_U} \arrow{d}{\pi} & U\times \CC^n \arrow{ld}{\pr_1}		\\ 
+		U.
+	      \end{tikzcd}
+	    \end{center}
+	\end{enumerate}
+      \end{defn}
+
+      Dados un fibrado vectorial complejo $E\rightarrow S$, y dos trivializaciones $\phi_U$ y $\phi_V$ de $E$, con $U\cap V \neq \varnothing$, podemos considerar la aplicación
+      \begin{align*}
+	\phi_U \circ \phi_V^{-1} :(U\cap V) \times \CC^n &\longrightarrow (U\cap V) \times \CC^n
+	\end{align*}
+	que a su vez induce una aplicación
+	\begin{align*}
+	  g_{UV}: U\cap V &\longrightarrow \GL_n(\CC) .
+	  \end{align*}
+	  Las funciones $g_{UV}$ se llaman \emph{funciones de transición} del fibrado $E\rightarrow S$. Nótese además que, por construcción, las funciones de transición satisfacen la condición de cociclo
+	  \begin{equation*}
+	    g_{UV} \cdot g_{VW} = g_{UW},
+	  \end{equation*}
+	  en $U\cap V \cap W$. Por tanto, si consideramos el haz $C_S(-,\GL_n(\CC))$ de las funciones continuas con valores en $\GL_n(\CC)$, que denotamos por $\GL_n(C_S)$, tenemos que las funciones de transición forman un cociclo
+	  \begin{equation*}
+	    (g_{UV})_{U,V \in \UU} \in Z^1(\UU,\GL_n(C_S)).
+	  \end{equation*}
+
+	  \begin{defn}
+	    Sean $E\rightarrow S$ y $E'\rightarrow S$ fibrados vectoriales sobre $S$. Un \emph{homomorfismo de fibrados vectoriales sobre $S$}, es una aplicación continua $f:E\rightarrow E'$ tal que el siguiente diagrama conmuta
+	    \begin{center}
+	      \begin{tikzcd}
+		E \arrow{rr}{f} \arrow{rd} && E' \arrow{ld}		\\ 
+		& S, &
+	      \end{tikzcd}
+	    \end{center}
+	    y tal que, para cada $p\in S$, la restricción $f_p=f|_{E_p}: E_p \rightarrow E'_p$ es una aplicación $\CC$-lineal.
+	  \end{defn}
+
+	  Podemos considerar entonces la categoría $\mathbf{Vect}_n(S)$ de los fibrados vectoriales complejos de rango $n$ sobre $S$. 
+	  \begin{prop}
+	    $\mathbf{M}(\mathbf{Vect}_n(S)) \cong H^1(S,\GL_n(C_S))$.
+	  \end{prop}
+	  \begin{proof}
+	  Sean $E$ y $E'$ son dos fibrados sobre $S$ con recubrimientos asociados $\UU$ y $\UU'$. Podemos considerar un refinamiento común de ambos $\VV$ y, en éste, las funciones de transición $(g_{UV})_{U,V \in \VV}$ y $(g'_{UV})_{U,V\in \VV}$ de $E$ y $E'$, respectivamente. 
+	  
+	  Ahora, si $f:E\rightarrow E'$ es un homomorfismo de fibrados vectoriales sobre $S$, la restricción $f|_U:E|_U \rightarrow E'|_U$, para $U\in \VV$, induce una aplicación $g_U:U\rightarrow \GL_n(\CC)$, de modo que podemos formar una $0$-cocadena $(g_U)_{U\in \VV} \in C^0(\VV,\GL_n(\CC))$. Más aún, del siguiente diagrama
+	  \begin{center}
+	    \begin{tikzcd}
+	      U \cap V \times \CC^n \arrow{r}{(s,g_V(s))} \arrow[bend right = 90]{dd}[anchor=east]{(s,g_{UV}(s))}& U\cap V \times \CC^n \arrow[bend left=90]{dd}[anchor=west]{(s,g'_{UV}(s))}	      \\ 
+	      E|_{U\cap V} \arrow{u}{\phi_V} \arrow{d}{\phi_U}\arrow{r}{f|_{U\cap V}} & E'|_{U\cap V} \arrow{u}{\phi'_V} \arrow{d}{\phi'_U}\\
+	      U \cap V \times \CC^n \arrow{r}{(s,g_U(s))} & U\cap V \times \CC^n, 	      
+	    \end{tikzcd}
+	  \end{center}
+	  deducimos que
+	  \begin{equation*}
+	    g'_{UV} = g_U g_{UV} g_V ^{-1} .
+	  \end{equation*}
+	  Recíprocamente, a partir de una $0$-cocadena $(g_U)_{U\in \VV}$, podemos definir 
+	  \begin{equation*}
+	    f_U = (\phi'_U)^{-1} \circ (s,g_U(s)) \circ \phi_U,
+	  \end{equation*}
+	 y, por la propiedad de pegado de las funciones continuas, tenemos que las $f_U$ definen globalmente un homomorfismo $f:E\rightarrow E'$ precisamente si se cumple la condición $g'_{UV} = g_U g_{UV} g_V ^{-1}$ .
+
+	  Lo que acabamos de demostrar es que la asignación que envía a cada fibrado vectorial $E\rightarrow S$ a $[E]\in H^1(S,\GL_n(C_S))$, la clase de cohomología del cociclo formado por sus funciones de transición $(g_{UV})_{U,V \in \UU}$, desciende correctamente a las clases de isomorfía de fibrados vectoriales para dar una aplicación
+	  \begin{equation*}
+	    \mathbf{M}(\mathbf{Vect}_n(S)) \longrightarrow H^1(S,\GL_n(C_S)).
+	  \end{equation*}
+	  Hemos visto además que esta aplicación es inyectiva.
+
+	  Para ver que la aplicación que acabamos de definir es sobreyectiva, es necesario recuperar un fibrado vectorial a partir de una clase de cohomología en $H^1(S,\GL_n(C_S))$. Para ello, tomemos una clase de cohomología representada por un par $(\UU,(g_{UV})_{U,V \in \UU})$. Definimos entonces
+	  \begin{equation*}
+	    \tilde{E} = \coprod_{U\in \UU} U \times \CC^n
+	  \end{equation*}
+	  y una relación de equivalencia en $\tilde{E}$ dada por
+	  \begin{center}
+	    $(p,v) \sim (p',w)$ si y sólo si $p=p'$ y $w=g_{UV}(p) v$, para $p\in U$ y $p'\in V$.
+	  \end{center}
+La condición de cociclo garantiza que esta relación de equivalencia está bien definida. Finalmente, si consideramos la proyección natural $(p,v)\mapsto p$, tenemos un fibrado $E\rightarrow S$ cuyas funciones de transición definen la clase de cohomología de partida. 
+	  \end{proof}
+
+	  \paragraph{Fibrados diferenciables y holomorfos.}	  Podemos poner ahora ciertas exigencias sobre los fibrados vectoriales para que tengan cierta estructura extra que nos será de interés. En primer lugar, notemos que como el grupo $\GL_n(\CC)$ está formado por matrices $n\times n$ con entradas complejas, podemos considerar las aplicaciones $\pr_{i,j}:\GL_n(\CC) \rightarrow \CC$, para cada $i,j = 1,\dots,n$. Si $U\subset S$ es un abierto en una variedad diferenciable, decimos que una aplicación $f:U\rightarrow \GL_n(\CC)$ es \emph{diferenciable} si, para cada $i,j=1,\dots,n$, las aplicaciones $\pr_{i,j}\circ f: U \rightarrow \CC$ son diferenciables. Análogamente, si $U\subset X$ es un abierto en una superficie de Riemann, decimos que una aplicación $f:U\rightarrow \GL_n(\CC)$ es \emph{holomorfa} si las correspondientes $\pr_{i,j}:U\rightarrow \CC$ son holomorfas. Denotamos por $\GL_n(C^\infty_S)$ (respectivamente, $\GL_n(\OO_X)$) los haces formados por las funciones definidas en abiertos de $S$ (resp., de $X$), con valores en $\GL_n(\CC)$, que sean diferenciables (resp. holomorfas).
+
+	  \begin{defn}
+	    Sea $S$ una variedad diferenciable y $E\rightarrow S$ un fibrado vectorial. Decimos que $E$ es un fibrado vectorial \emph{diferenciable} si sus funciones de transición $g_{UV}:U\cap V \rightarrow \GL_n(\CC)$ son diferenciables. Análogamente, si $X$ es una superficie de Riemann, decimos que un fibrado $E\rightarrow X$ es \emph{holomorfo} si sus funciones de transición son holomorfas.
+
+	    Un homomorfismo entre dos fibrados de rango $n$ $E\rightarrow E'$ es \emph{diferenciable} (respectivamente, \emph{holomorfo}), si las funciones inducidas $g_U:U\rightarrow \GL_n(\CC)$ son diferenciables (respectivamente, holomorfas).
+
+	    Denotamos por $\mathbf{Vect}_{n}(C^\infty_S)$ y por $\mathbf{Vect}_{n}(\OO_X)$ las categorías de los fibrados diferenciables en $S$ y de los fibrados holomorfos en $X$, respectivamente.
+	  \end{defn}
+
+	  Claramente, si $X$ es una superficie de Riemann, tenemos una sucesión de functores
+	  \begin{equation*}
+	    \mathbf{Vect}_n(\OO_X) \longrightarrow \mathbf{Vect}_n(C^\infty_X) \longrightarrow \mathbf{Vect}_n(X),
+	  \end{equation*}
+	  que consisten en «olvidar» las estructuras holomorfas y diferenciables. Descendiendo a las clases de isomorfía, tenemos simplemente la sucesión
+	  \begin{equation*}
+	    H^1(X,\GL_n(\OO_X)) \longrightarrow H^1(X,\GL_n(C^\infty_X)) \longrightarrow H^1(X,\GL_n(C_X)),
+	  \end{equation*}
+	  inducida por las inclusiones $\OO_X \hookrightarrow C^\infty_X \hookrightarrow C_X$.
+	  De modo que $H^1(X,\GL_n(\OO_X))$ y $H^1(X,\GL_n(C^\infty_X))$ clasifican los fibrados holomorfos y diferenciables, respectivamente.
+
+	  \paragraph{Fibrados de línea.}	  En particular, los fibrados de rango $1$, diferenciables y holomorfos, también llamados \emph{fibrados de línea}, están clasificados por los \emph{grupos de Picard} diferenciable y holomorfo, respectivamente
+	  \begin{align*}
+	    \mathrm{Pic}(X)=H^1(X,(C^\infty_X)^*), \\
+	    \mathbf{Pic}(X)=H^1(X,\OO^*_X).
+	  \end{align*}
+	  Estos conjuntos son, en efecto, grupos, puesto que los haces $(C^\infty_X)^*$ y $\OO^*_X$ son haces de grupos abelianos.
+
+	  \begin{prop}
+	    Sea $X$ una superficie de Riemann. Consideremos la aplicación $\exp:\OO_X \rightarrow \OO_X^*$ que envía cada función holomorfa a su exponencial y la inclusión $\OO_X\hookrightarrow C^\infty_X$. Consideremos también las aplicaciones inducidas $H^1(X,\OO_X)\rightarrow H^1(X,\OO_X^*)$ y $H^1(X,\OO_X^*)\rightarrow H^1(X,(C^\infty_X)^*)$. La siguiente sucesión es exacta
+	    \begin{center}
+	      \begin{tikzcd}
+		H^1(X,\OO_X) \rar & H^1(X,\OO_X^*) \rar & H^1(X,(C^\infty_X)^*).
+	      \end{tikzcd}
+	    \end{center}
+	  \end{prop}
+	  \begin{proof}
+	    Consideremos en primer lugar un par $(\UU,(g_{UV})_{U,V\in \UU})$ representando una clase de cohomología en $H^1(X,\OO_X^*)$ tal que $g_{UV}=f_U f_V^{-1}$, con $f_U \in C^\infty_X(U)^*$, para cada $U\in \UU$. En tal caso, refinando el recubrimiento $\UU$ si es preciso, podemos definir el logaritmo en cada uno de los $U\in \UU$ (por ejemplo, si $\UU$ son simplemente conexos). Así, podemos tomar una $0$-cocadena $(h_{U})_{U \in \UU}$ tal que $\exp(h_{U})=f_U$. Ahora, si definimos las funciones $h_{UV} = h_U - h_V$ en $U\cap V$, para cada $U,V \in \UU$, que claramente forman un cociclo, tenemos que $g_{UV} = \exp(h_{UV})$. Además, las $h_{UV}$ son holomorfas ya que en las intersecciones $U\cap V$ podemos tomar funciones holomorfas $h'_{UV}$ tales que $\exp(h'_{UV})$, de modo que 
+	    \begin{equation*}
+	      \exp(h'_{UV} - h_{UV}) = 1,
+	    \end{equation*}
+	    y por tanto, $h_{UV} = h'_{UV} + k_{UV}$, para $k_{UV} \in \mathbb{Z}$.
+	    Esto demuestra que el núcleo está contenido en la imagen.
+
+	    Tomemos ahora un par $(\UU,(g_{UV})_{U,V \in \UU})$ representando una clase de cohomología en $H^1(X,\OO_X^*)$ tal que $g_{UV}=\exp(h_{UV})$ para un cociclo $(h_{UV})_{U,V \in \UU} \in H^1(\UU,\OO_X)$. En particular, $(h_{UV})_{U,V \in \UU} \in Z^1(\UU,C^\infty_X)$ y, como ya vimos $H^1(X,C^\infty_X) =0$, luego existe una $0$-cocadena $(f_{U})_{U\in \UU}$ tal que $h_{UV}=f_U-f_V$ en $U\cap V$, para cada $U,V \in \UU$. Por tanto, para cada $U,V \in \UU$, se tiene que $g_{UV}= \exp(f_U) \exp(f_V)^{-1}$ en $U\cap V$. Esto demuestra que la imagen está contenida en el núcleo.
+	  \end{proof}
+
+	  Este resultado tiene una consecuencia interesante. Definimos la \emph{jacobiana} $J(X)$ de $X$ como el núcleo de la aplicación $H^1(X,\OO^*_X) \rightarrow H^1(X,(C^\infty_X)^*)$ definida anteriormente. Es decir, $J(X)$ parametriza las clases de isomorfía los fibrados de línea holomorfos que son \emph{diferenciablemente} triviales (esto es, diferenciablemente isomorfos al \emph{fibrado trivial} $\pr_1:X\times \CC \rightarrow X$.
+
+	  \begin{corol}
+	   Si $X$ es una superficie de Riemann compacta, el conjunto $J(X)$ está en biyección con un toro de dimensión $g$ el género de $X$.
+	  \end{corol}
+
+	  \begin{proof}
+	    Por la proposición anterior y por la sucesión exacta larga en cohomología, la sucesión exacta corta exponencial $\underline{\mathbb{Z}} \rightarrow \OO_X \overset{\exp}{\rightarrow} \OO_X^*$ induce una sucesión exacta
+	    \begin{center}
+	      \begin{tikzcd}
+		0 \rar & H^1(X,\underline{\mathbb{Z}}) \rar  & H^1(X,\OO_X) \rar &  J(X) \rar & 0. 
+	      \end{tikzcd}
+	    \end{center}
+	    (Esto es así ya que, al ser $X$ compacta, las funciones holomorfas globales son constantes, luego $\OO_X(X)=\CC$ y $\OO_X(X)^*=\CC^*$ y $\exp:\CC \rightarrow \CC^*$ es sobreyectiva.)
+
+	    Por tanto, tenemos que $J(X) \cong H^1(X,\OO_X) / H^1(X,\underline{\mathbb{Z}})$. Recordemos ahora que por el teorema de Dolbeaut $H^1(X,\OO_X) = H^{0,1}(X)$, mientras que una de las consecuencias del teorema de Hodge era que $H^{0,1}(X) \cong \CC^g$. Por otra parte, como ya vimos, $H^1(X,\underline{\mathbb{Z}})\cong \mathbb{Z}^{2g}$. Así, concluimos que $J(X)$ está en biyección con el toro $\CC^g/\mathbb{Z}^{2g}$.
+	  \end{proof}
+
+	    
+	  \paragraph{Construcciones típicas.} Veamos ahora algunas de las construcciones típicas de fibrados vectoriales. Estas construcciones que daremos a continuación son igualmente válidas en la categoría de fibrados diferenciables como en la de fibrados holomorfos. 
+
+	  En primer lugar, a cada fibrado vectorial $E\rightarrow S$ le podemos asignar su \emph{fibrado dual} $E^*\rightarrow S$, cuyas fibras son los espacios vectoriales duales $E^*_p = (E_p)^*$ y sus funciones de transición son las inversas traspuestas
+	  \begin{equation*}
+	    g^{E^*}_{UV} = ((g^E_{UV})^t)^{-1}.
+	  \end{equation*}
+	  De forma similar, si $E\rightarrow S$ y $E'\rightarrow S$ son fibrados vectoriales de rangos $n$ y $n'$, respectivamente , podemos definir los fibrados
+	  \begin{itemize}
+	    \item \emph{suma directa} $E\oplus E'$, de rango $n+n'$, definido por las funciones de transición
+	      \begin{equation*}
+		g_{UV}^{E\oplus E'}=		\left( 
+		\begin{array}{cc}
+		  g_{UV}^E & 0 \\
+		  0 & g_{UV}^{E'}
+		\end{array}
+		 \right),
+	      \end{equation*}
+	    \item y \emph{producto tensorial} $E\otimes E'$, de rango $nn'$, definido por las funciones de transición
+	      \begin{equation*}
+		g^{E\otimes E'}_{UV} = g_{UV}^E \otimes g_{UV}^{E'}.
+	      \end{equation*}
+	  \end{itemize}
+	  Nótese que ahora la estructura de grupo en los grupos de Picard $H^1(S,C^\infty_S)$ y $H^1(X,\OO_X)$ puede verse directamente en términos de los fibrados de línea como
+	  \begin{align*}
+	    ([L],[L']) &\longmapsto [L\otimes L'],
+	    \end{align*}
+	    con elemento identidad dado por el \emph{fibrado trivial} $\pr_1:S\times \CC \rightarrow X$ y elemento inverso dado por el fibrado dual, $L\otimes L^*$ es trivial. Esto motiva la notación $L^{-1}:=L^*$ para fibrados de línea.
+
+	    Asociados a un fibrado vectorial $E\rightarrow S$ también podemos definir sus \emph{productos exteriores} $\wedge^k E$, de rango ${n}\choose{k}$ dados por las funciones de transición
+	    \begin{equation*}
+	      g^{\wedge^k E}_{UV} = \wedge^k g^{E}_{UV}.
+	    \end{equation*}
+	    En particular, cuando $k=n$ tenemos el \emph{fibrado determinante} $\det E = \wedge^n E$, que es un fibrado de línea definido por las funciones de transición
+	    \begin{equation*}
+	      g^{\det E}_{UV} = \det g_{UV}.
+	    \end{equation*}
+
+	    Si las funciones de transición $g_{UV}$ de un fibrado $E$ de rango $n$ pueden descomponerse en la forma
+	    \begin{equation*}
+	      g_{UV} = 
+	      \left(
+		\begin{array}{c|c}
+		  h_{UV} & k_{UV} \\
+		  \hline
+		  0 & j_{UV}
+		\end{array}
+		 \right),
+	    \end{equation*}
+	    para $h_{UV}:U\cap V \rightarrow \GL_{n'}(\CC)$, con $n'<n$, las funciones $h_{UV}$ definen un \emph{subfibrado} $E'\subset E$ de rango $n'$. Por otra parte, las funciones $j_{UV}$ definen el \emph{fibrado cociente} $E/E'$, de rango $n-n'$.
+
+	    La última construcción que vamos a exponer es la del \emph{fibrado inducido} (o \emph{pullback}) $f^*E$, donde $f:S\rightarrow T$ es una aplicación diferenciable (u holomorfa) y $E\rightarrow T$ es un fibrado vectorial de rango $n$. Este fibrado se construye definiendo
+	    \begin{equation*}
+	      (f^* E)_p = E_{f(p)},
+	    \end{equation*}
+	    para $p\in S$, y si $\phi_U$ es una trivialización en un abierto $U$, definimos la trivialización correspondiente en $f^{-1}(U)$,
+	    \begin{align*}
+	      f^*E_{f^{-1}(U)}&\longrightarrow f^{-1}(U) \times \CC^n\\ 
+	        (p,v) &\longmapsto (p, \phi_U(f(p),v)). 
+	      \end{align*}
+
+	      \paragraph{Secciones.} Vamos a tratar ahora las \emph{secciones} de un fibrado vectorial.
+	      \begin{defn}
+		Dado un fibrado vectorial diferenciable $E\rightarrow S$ sobre una variedad diferenciable $S$ y $U\subset S$ un subconjunto abierto, una \emph{sección} del fibrado $E\rightarrow S$ sobre $U$ es una aplicación diferenciable $s: U \rightarrow E$ tal que el siguiente diagrama conmuta
+		\begin{center}
+		  \begin{tikzcd}
+		    & E \arrow{d}		    \\ 
+		    U \arrow{ru}{s} \arrow[hook]{r} & S.
+		  \end{tikzcd}
+		\end{center}
+		Llamamos $\Gamma(U,E)$ al conjunto de las secciones de $E$ sobre $U$. Es inmediato ahora ver que el prehaz $\Gamma_E = \Gamma(-,E)$ define un haz, llamado el \emph{haz de secciones de $E$}.
+
+		Si $E$ tiene rango $n$ y existen secciones $\mathbf{e}_1,\dots,\mathbf{e}_n \in \Gamma(U,E)$ tales que, para cada $p\in U$, los vectores $\mathbf{e}_i(p) \in E_p$ forman una base de $E_p$, decimos que $\mathbf{e}=(\mathbf{e}_1,\dots,\mathbf{e}_n)$ es un \emph{sistema de referencia} de $E$ en $U$.
+	      \end{defn}
+
+	      Nótese que un sistema de referencia de $E$ en $U$ es esencialmente lo mismo que una trivialización de $E$ en $U$. En efecto, dado un sistema de referencia $E$, tenemos un isomorfismo
+	      \begin{align*}
+		(C^\infty_S(U))^n &\longrightarrow \Gamma(U,E) \\ 
+		f= (f_1,\dots,f_n)  &\longmapsto  \mathbf{e} f = \sum_{i=1}^n f_i \mathbf{e}_i,
+		\end{align*}
+		que define la trivialización 
+		\begin{align*}
+		   U \times \CC^n &\longrightarrow E|_U\\ 
+		   (p,v) &\longmapsto \sum_{i=1}^n f_i(p) \mathbf{e}_i(p). 
+		  \end{align*}
+		  Por otra parte, dada una trivialización $\phi_U$, podemos definir la referencia $\mathbf{e}$ de modo que $\mathbf{e}_i(p) = \phi_U^{-1}(p,e_i)$, donde $e_i$ denota el $i$-ésimo vector de la base canónica de $\CC^n$.
+
+		  Ahora, si $\mathbf{e}^U$ y $\mathbf{e}^V$ son sistemas de referencia en dos abiertos $U$ y $V$ tenemos, para $p\in U\cap V$,
+
+		  \begin{equation*}
+		    \phi_U(\mathbf{e}^U_i(p)) = (p,e_i) =\phi_V(\mathbf{e}^V_i(p)),
+		  \end{equation*}
+		  luego
+		  \begin{equation*}
+		    \mathbf{e}^V_i(p) = \phi_V^{-1} \circ \phi_U (\mathbf{e}^V_i(p)) =  \mathbf{e}^U_i(p) g_{UV}(p).
+		  \end{equation*}
+		  En consecuencia, si $s\in \Gamma(U\cap V,E)$ puede escribirse como $s=\mathbf{e}^U s^U = \mathbf{e}^V f^V$ para $s^U \in (C^\infty_S(U))^n$ y $s^V \in (C^\infty_S(V))^n$, tenemos que
+	      \begin{equation*}
+		\mathbf{e}^U s^U=	\sum_{i=1}^n s^U_i\mathbf{e}^U_i=s= \sum_{i=1}^n s^V_i \mathbf{e}^V_i = \mathbf{e}^V s^V.
+	      \end{equation*}
+	      De modo que
+	      \begin{equation*}
+		s^U=g_{UV} s^V.
+	      \end{equation*}
+
+	      A la vista de esto, si $X$ es una superficie de Riemann y $E\rightarrow X$ es un fibrado holomorfo sobre $X$, decimos que una sección $s \in \Gamma(U,E)$, para un abierto $U\in X$, es \emph{holomorfa} si para cada $p\in U$ existe un entorno $V$ de $p$ y un sistema de referencia $\mathbf{e}^V$ de $E$ en $V$ tal que $s|_V=\mathbf{e}^V s^V$, con $s^V\in (\OO_X(U))^n$. Denotamos por $\boldsymbol{\Gamma}(U,E)$ el conjunto de secciones holomorfas de $E$ sobre $U$ y por $\boldsymbol{\Gamma}_E = \boldsymbol{\Gamma}(-,E)$ el correspondiente \emph{haz de secciones holomorfas}.
+
+	      Nótese que a partir del haz $\Gamma_E$ (respectivamente, $\boldsymbol{\Gamma}_E$) recuperamos el fibrado diferenciable (resp., holomorfo) $E$. En efecto, basta tomar un recubrimiento trivializante $\UU$ de $S$, en el sentido de que existe una referencia $\mathbf{e}^U \in \Gamma_E(U)$ (resp. $\mathbf{e}^U \in \boldsymbol{\Gamma}_E(U)$) para cada $U\in \UU$. Ahora, recuperamos las funciones de transición $(g_{UV})_{U,V \in \UU}$ como aquellas tales que 
+	      \begin{equation*}
+		\mathbf{e}^U = \mathbf{e}^V g_{UV}.
+	      \end{equation*}
+	      en $U\cap V$.
+	      Debido a estas identificaciones, en ocasiones denotamos a un fibrado y a su haz de secciones indistintamente. Por ejemplo, el fibrado trivial de rango $n$, $\pr_1:S\times \CC^n \rightarrow S$ sobre una superficie de Riemann $X=(S,\OO_X)$ se denota por $(C^\infty_X)^n$ si se considera como fibrado diferenciable o por $\OO^n_X$ si se entiende como fibrado holomorfo.
+	      
+	      Por otra parte, si $E\rightarrow X$ es un fibrado diferenciable de rango $n$ sobre una superficie de Riemann, podemos dotar a $E$ de la estructura de fibrado holomorfo si encontramos un subhaz $\mathscr{E} \hookrightarrow \Gamma_E$ tal que, para cada trivialización $\phi_U$ en algún abierto $U$, existe una referencia $\mathbf{e}^U$ de $E$ en $U$, con las $\mathbf{e}_i^U \in \mathscr{E}(U)$ y tales que $\phi_U(\mathbf{e}_i^U) \in (\OO_X(U))^n$; de modo que $\boldsymbol{\Gamma}_E = \mathscr{E}$. Decimos que este $\mathscr{E}$ es una \emph{estructura holomorfa} en $E$.
+
+
+	      \begin{ejemplo} [El fibrado tangente]
+		Vamos a introducir ahora un ejemplo de vital importancia. Si $X=(S,\OO_S)$ es una superficie de Riemann y $p\in S$, el espacio $T_pS_{\CC}$ es un $\CC$-espacio vectorial de dimensión (compleja) $2$ y podemos construir el fibrado vectorial $TS_{\CC}$, llamado el \emph{fibrado tangente complexificado}, que localmente está generado por las secciones $\partial_x, \partial_y$ o, equivalentemente por $\partial_z, \partial_{\bar{z}}$. 
+		
+		Resultan más interesantes los subfibrados $T^{1,0}X$ y $T^{0,1}X$ del fibrado $TS_{\CC}$. Asociados a ellos podemos realizar también las construcciones del \emph{fibrado cotangente complexificado} $T^*S_{\CC}=(TS_{\CC})^*$ y del \emph{fibrado cotangente holomorfo} $\boldsymbol{T}^* X = (\boldsymbol{T}X)^*$ y los productos exteriores $\Lambda^p(S)=\wedge^p T^*S_{\CC}$ y $\Lambda^{p,q}(X)=\wedge^p (T^{1,0}X)^* \wedge^q (T^{0,1}X)^*$. El haz de $p$-formas $\Omega^p_S$ es el haz de secciones diferenciables del fibrado $\Lambda^p(S)$, mientras que el haz de $(p,q)$-formas $\Omega^{p,q}_X$ es el haz de secciones diferenciables del fibrado $\Lambda^{p,q}(X)$.
+
+		En particular, $\boldsymbol{T}X=T^{1,0}X$ se llama el \emph{fibrado tangente holomorfo} de $X$ que, de hecho, tiene estructura de fibrado vectorial holomorfo. Su dual $(\boldsymbol{T}X)^*$ es el \emph{fibrado cotengente holomorfo} y se suele denotar por $K_X$. Tiene una estructura holomorfa definida por el haz de $1$-formas holomorfas $\boldsymbol{\Omega}^1_X$.
+
+		Podemos definir también formas diferenciales con valores en un fibrado vectorial. Si $E\rightarrow S$ es un fibrado vectorial, consideramos los fibrados $\Lambda^k(S) \otimes E$ y $\Lambda^{p,q}(X)\otimes E$, con haces de secciones $\Omega^k_E$ y $\Omega^{p,q}_E$, respectivamente. Para cada subconjunto abierto $U\subset S$, llamamos a $\Omega^k(U,E):=\Omega^k_E(U)$ (respectivamente, a $\Omega^{p,q}(U,E):=\Omega^{p,q}_E(U)$) el conjunto de \emph{$k$-formas diferenciales con valores en $E$} (respectivamente, \emph{formas diferenciales de tipo $(p,q)$ con valores en $E$}). En particular, las $0$-formas son las secciones de $E$, esto es, $\Omega^0(U,E)=\Gamma(U,E)$. De ahora en adelante preferiremos usar la notación $\Omega^0_E$ para el haz de secciones diferenciables, para no generar confusión con las secciones holomorfas. Finalmente, si $E$ es un fibrado holomorfo, entonces podemos considerar el \emph{haz de $1$-formas holomorfas con valores en $E$} como el haz $\boldsymbol{\Omega}^1_E=\boldsymbol{\Gamma}_E \otimes \boldsymbol{\Omega}^1_X$ definido por las secciones holomorfas del fibrado $E\otimes K_X$.
+	      \end{ejemplo}
+
+	      \paragraph{Clasificación de los fibrados diferenciables en superficies.} Para concluir el apartado, vamos a demostrar un teorema de clasificación para los fibrados diferenciables en superficies, que afirma que \emph{los fibrados diferenciables están clasificados por su rango y por su determinante}. Más concretamente:
+	      \begin{thm}
+		Si $E\rightarrow S$ es un fibrado vectorial complejo diferenciable de rango $n$ sobre una superficie diferenciable $S$, entonces es (diferenciablemente) isomorfo al fibrado vectorial $\det E \oplus (C^\infty_S)^{n-1}$. 
+	      \end{thm}
+
+	      En otras palabras, esto prueba que la siguiente aplicación es biyectiva
+	      \begin{align*}
+		\det :H^1(S, \GL_n(C_S^\infty))&\longrightarrow H^1(S,C^\infty_S)\\ 
+		[E] &\longmapsto [\det E].
+		\end{align*}
+
+	      La clave para la demostración de este teorema es el \emph{teorema de transversalidad}, que es una consecuencia del teorema de Sard que no probaremos aquí. En pocas palabras, este teorema garantiza que, si consideramos $S_0 = S\times \{0\} \subset E$ la \emph{sección cero} de $E$, podemos tomar una sección global $s \in \Omega^0(S,E)$ tal que $s$ es \emph{transversal} a la subvariedad $S_0$. Aquí, ser transversal quiere decir que, en los puntos $p$ en los que $s(p) \in S_0$,
+	      \begin{equation*}
+		d_ps (T_p S) + T_{s(p)}S_0 = T_{s(p)} E.
+	      \end{equation*}
+	      Ahora, $s(p) \in S_0$ si y sólo si la sección $s$ se anula en $p$. Sin embargo, $\dim_{\mathbb{R}} E = 2n +2$, $\dim_{\mathbb{R}} S_0 = 2$ y $\dim_{\mathbb{R}} d_ps(T_pS) \leq \dim_{\mathbb{R}} S = 2$, luego, si $n>1$, las dimensiones no suman lo suficiente como para que se pueda verificar la condición de transversalidad, de modo que $s$ no se anula en ningún punto. 
+
+	      \begin{proof}
+		Podemos demostrar ahora el teorema por inducción en $n$. Por supuesto, si $E$ es un fibrado de línea $E\cong \det E$. Supongamos entonces que $n>1$ y que todo fibrado vectorial $E'$ de rango $n-1$ es isomorfo a $\det E' \oplus (C^\infty_S)^{n-2}$.
+
+		Si tomamos ahora la sección $s$ que nunca se anula podemos definir el fibrado de línea
+		\begin{equation*}
+		  L = \coprod_{p \in S} \mathrm{span}(s(p)),
+		\end{equation*}
+		con
+		\begin{align*}
+		   L&\longrightarrow S\\ 
+		    \lambda s(p) &\longmapsto p,
+		  \end{align*}
+y podemos descomponer $E=E'\oplus L$, con $E'$ un fibrado vectorial de rango $n-1$. Además, la aplicación
+\begin{align*}
+ S\times \CC &\longrightarrow L\\ 
+    (p,\lambda) &\longmapsto \lambda s(p) 
+  \end{align*}
+  es un isomorfismo, de modo que $E=E' \oplus C^\infty_S$. Por la hipótesis de inducción, tenemos
+  \begin{equation*}
+    E=E' \oplus C^\infty_S = \det E' \oplus (C^\infty_S)^{n-2} \oplus C^\infty_S = \det E \oplus (C^\infty_S)^{n-1},
+  \end{equation*}
+  ya que $\det E \cong \det E'$.
+	      \end{proof}
+
+		
+
+	  \subsection{Métricas, conexiones y curvatura}
+	  \begin{defn}
+	    Sea $S$ una superficie y $E\rightarrow S$ un fibrado vectorial. Una \emph{conexión} $D$ en $E$ es un operador $\CC$-lineal
+	    \begin{equation*}
+	      D:\Omega^0_E \longrightarrow \Omega^1_E
+	    \end{equation*}
+	    tal que
+	    \begin{equation*}
+	      D(fs) = sdf + f Ds,
+	    \end{equation*}
+	    para $f\in C^\infty_X(U)$ y $s\in \Omega^0(U,E)$, para cada subconjunto abierto $U\subset X$.
+	  \end{defn}
+
+	  Sea $D$ una conexión en un fibrado $E\rightarrow S$. Si tomamos una referencia $\mathbf{e}^U$ de $E$ en un abierto $U$, podemos escribir
+	  \begin{equation*}
+	    D \mathbf{e}^U = \mathbf{e}^U A^U,
+	  \end{equation*}
+	  donde $A^U$ es una matriz cuyas componentes son $1$-formas $A^U_{ij} \in \Omega^1_X(U)$. Ahora, dada cualquier otra sección $s=\mathbf{e}^U s^U \in \Omega^0(U,E)$, tenemos
+	  \begin{equation*}
+	    D s = D(\mathbf{e}^U s^U) = D\mathbf{e}^U s^U + \mathbf{e}^U ds^U = \mathbf{e}^U (A^U + d) s^U.
+	  \end{equation*}
+	  La matriz $A^U$ se llama la \emph{$1$-forma de conexión} de $D$ en $U$. Ahora, si $\mathbf{e}^V$ es un sistema de referencia distinto en un abierto $V$, tenemos, en $U\cap V$,
+	  \begin{align*}
+	    Ds &= \mathbf{e}^U (A^U+d)s^U = \mathbf{e}^Vg_{UV}^{-1} (A^U+d) s^U \\ 
+	    &= \mathbf{e}^V (g_{UV}^{-1} A^U g_{UV} s^V + g_{UV}^{-1}d(g_{UV} s^V)) \\
+	    & = \mathbf{e}^V (g_{UV}^{-1} A^U g_{UV} + g_{UV}^{-1} dg_{UV} + d) s^V,
+	  \end{align*}
+	  de modo que
+	  \begin{equation*}
+	    A^V = g_{UV}^{-1} A^U g_{UV} + g_{UV}^{-1} dg_{UV}.
+	  \end{equation*}
+
+	  Si $D$ y $D'$ son dos conexiones en $E\rightarrow S$, tenemos que $D-D'$ actúa localmente, en un abierto trivializante $U$, mediante la matriz $B^U=A^U-A'^U$. Ahora, si $V$ es otro abierto distinto, 
+	  \begin{equation*}
+	   B^V= A^V-A'^V =g_{UV}^{-1} (A^U-A'^V) g_{UV} .
+	  \end{equation*}
+	  Por tanto, mediante la propiedad de pegado las matrices $B^U$ definen globalmente una sección $B \in \Omega^1(X,\End E)$, donde $\End E = E^* \otimes E$ es el \emph{fibrado de endomorfismos de $E$}. Esto implica que podemos identificar el conjunto $\mathcal{A}(E)$ de las conexiones en $E\rightarrow S$ como un espacio afín modelado sobre el espacio $\Omega^1(X,\End E)$. En particular, si $L$ es un fibrado de línea, $\End L = L^{-1} L = C^\infty_S$, de modo que $\mathcal{A}(L)$ es un espacio afín modelado sobre $\Omega^1(X)$.
+
+	  Nótese que el operador $D$ induce de manera natural otro operador $D:\Omega^1_E \rightarrow \Omega^2_E$ en la forma
+	  \begin{equation*}
+	    D(\omega s) = d\omega s - \omega \wedge Ds,
+	  \end{equation*}
+	  para $\omega \in \Omega^1(U)$ y $s \in \Omega^0(U,E)$.
+	  \begin{defn}
+	    Sea $D$ una conexión en un fibrado vectorial $E$. Definimos la \emph{curvatura} de $D$ como el operador
+	    \begin{equation*}
+	     F_D=D^2: \Omega^0_E \rightarrow \Omega^1_E.
+	    \end{equation*}
+	  \end{defn}
+
+	  La curvatura es realmente una aplicación $C^\infty_S$-lineal, ya que
+	  \begin{equation*}
+	    D^2(fs) = D(s df + fDs) = s d(df) -df \wedge Ds + df\wedge Ds + f D^2 s = f D^2s,
+	  \end{equation*}
+	  para $s\in \Omega^0(U,E)$ y $f\in C^\infty_S(U)$.
+
+	  Localmente, si tomamos una referencia $\mathbf{e}^U$ en un abierto $U$, podemos escribir
+	  \begin{equation*}
+	    F_D(\mathbf{e}^U)= D^2(\mathbf{e}^U) = D(\mathbf{e}^U A^U) = D\mathbf{e}^U \wedge A^U + \mathbf{e} \wedge dA^U = \mathbf{e}^U (A^U \wedge A^U + dA^U) = \mathbf{e}^U F^U,
+	  \end{equation*}
+	  para $F^U = dA^U + A^U \wedge A^U$ una matriz de $2$-formas que llamamos la \emph{$2$-forma de curvatura} de $D$ en $U$. Además, si $\mathbf{e}^V$ es otro sistema de referencia en otro abierto $V$, en la intersección $U\cap V$ tenemos
+	  \begin{equation*}
+	    F_D(s)=   F_D (\mathbf{e}^U s^U) = \mathbf{e}^U F^U s^U = \mathbf{e}^V g_{UV}^{-1} F^U s^U = \mathbf{e}^V g_{UV}^{-1} F^V g_{UV} s^V,      
+	  \end{equation*}
+	  de modo que
+	  \begin{equation*}
+	    F^U = g_{UV}^{-1} F^V g_{UV}.
+	  \end{equation*}
+	  Por tanto, podemos identificar la curvatura de $D$ como una $2$-forma $F_D \in \Omega^2(X,\End E)$.
+
+	  \paragraph{Transformaciones gauge.} Si $E\rightarrow S$ es un fibrado diferenciable, un automorfismo $E\rightarrow E$ se llama una \emph{transformación gauge}. Denotamos por $\GL(E)$ el grupo de las transformaciones gauge. Recordemos que si $f\in \GL(E)$ y $S$ tenía un recubrimiento $\UU$ por abiertos trivializantes, entonces las restricciones $f|_U:E|_U \rightarrow E|_U$, para cada $U\in \UU$ inducían aplicaciones $g_U:U\rightarrow \GL_n(\CC)$, de modo que a partir de $f$ podíamos formar una $0$-cocadena $(g_U)_{U\in \UU} \in C^0(\UU,\GL_n(C^\infty_S))$ y viceversa. En resumen, que un recubrimiento $\UU$ con trivializaciones $\varphi_U$ para cada $U\in \UU$ induce un isomorfismo de grupos
+	  \begin{equation*}
+	    \GL(E) \cong C^0(\UU,\GL_n(C^\infty_S)).
+	  \end{equation*}
+
+	  El grupo $\GL(E)$ actúa sobre el espacio afín $\mathcal{A}(E)$ asignando a cada elemento $f \in \GL(E)$ la transformación $D \mapsto f^{-1} \circ D \circ f$.
+ Localmente, a cada cocadena $(g_U)_{U \in \UU} \in C^0(\UU,\GL_n(C^\infty_S))$ se le asocia la transformación 
+	  \begin{equation*}
+	    A^U \longmapsto g_U^{-1} A^U g_U + g_U^{-1} dg_U,
+	  \end{equation*}
+	  para cada $U\in \UU$. Por su parte, tenemos entonces que la curvatura cambia como $F_{f^{-1} D f} = f^{-1} F_D f$ globalmente y, localmente, como
+	  \begin{equation*}
+	    F^U \longmapsto g_U^{-1} F^U g_U.
+	  \end{equation*}
+
+	  \paragraph{Transporte paralelo.} Sea $E\rightarrow S$ un fibrado vectorial y $D$ una conexión en $E$. Como ya vimos, la conexión está definida por un operador $D:\Omega^0_E \rightarrow \Omega^1_E$, así, si $s \in \Omega^0(U,E)$ es una sección de $E$ y $\xi \in \Gamma(U,TS)$ es un campo, podemos definir la \emph{derivada covariante de $s$ a lo largo de $\xi$} como
+	  \begin{equation*}
+	    D_\xi s = (Ds)(\xi).
+	  \end{equation*}
+
+	  Supongamos ahora que $\gamma:[0,1] \rightarrow S$ es un camino y llamemos $p=\gamma(0)$. Afirmamos que, fijo un elemento $v \in E_p$ podemos encontrar un único camino $\tilde{\gamma}_v:[0,1] \rightarrow E$, con $\tilde{\gamma}_v(0)=v$, tal que, para cada $t_0\in [0,1]$ existe un entorno $U$ de $\gamma(t_0)$ y una sección $s\in \Omega^0(U,E)$ cumpliendo que, 
+	  \begin{equation*}
+	    s(\gamma(t)) = \tilde{\gamma}_v (t) \ \ \text{ y } \ \ D_{\gamma'(t)} s = 0,
+	  \end{equation*}
+	  para cada $t \in \gamma^{-1}(U \cap \gamma([0,1]))$. En efecto, esto es cierto ya que
+	  \begin{equation*}
+	    D_{\gamma'(t)} s= (ds + As)_{\gamma(t)} (\gamma'(t))= \tilde{\gamma}_v'(t) + A(\gamma'(t)) \tilde{\gamma}_v(t) =0.
+	  \end{equation*}
+	  Se trata entonces de hallar soluciones $\tilde{\gamma}_v$, con $\tilde{\gamma}_v(0)=v$, a la ecuación
+	  \begin{equation*}
+	    \tilde{\gamma}_v'(t) + A(\gamma'(t))\tilde{\gamma}_v(t) = 0.
+	  \end{equation*}
+	  La existencia y unicidad de estas soluciones está garantizada por los teoremas usuales de ecuaciones diferenciales ordinarias. El camino $\tilde{\gamma}_v$ se llama \emph{transporte paralelo de $v$ a lo largo de $\gamma$}. 
+
+	  En particular, cuando $\gamma$ es un lazo, es decir, si $\gamma(0)=\gamma(1)=p$, tenemos que $\tilde{\gamma}_v(1) \in E_p$ es un elemento de $E_p$ posiblemente distinto de $v$. Definimos la \emph{holonomía en $p$ de la conexión $D$ a lo largo de $\gamma$} como la aplicación
+	  \begin{align*}
+	    \hol^D_p(\gamma) :E_p &\longrightarrow E_p \\ 
+	    v &\longmapsto \tilde{\gamma}_v(1).
+	    \end{align*}
+	    Esta aplicación es, de hecho, un isomorfismo, de modo que la holonomía en $p$ induce una aplicación
+	    \begin{equation*}
+	      \hol^D_p: \left\{ \text{Lazos con punto base $p$} \right\} \longrightarrow \GL(E_p).
+	    \end{equation*}
+
+	  \begin{ejemplo}
+	    Consideremos el caso especial en que $L\rightarrow S$ es un fibrado de línea. En este caso, una conexión es simplemente un operador de la forma $D=d+A$, con $A\in \Omega^1(X,\End L)$ y su curvatura es $F=dA$. En este caso, podemos escribir directamente la solución a la ecuación diferencial del transporte paralelo
+	    \begin{equation*}
+	      \tilde{\gamma}_v(t) = \exp\left(\int_0^t A(\gamma'(t')) dt'\right) v = \exp\left(\int_{\gamma|_{[0,t]}} A\right) v.
+	    \end{equation*}
+	    Ahora, si $\gamma_0$ y $\gamma_1$ son dos caminos que unen los puntos $p$ y $p'$ y son homótopos, por una homotopía $f:[0,1]^2 \rightarrow S$ con $f_s=f(s,-)$ los correspondientes caminos y $f_0=\gamma_0$, $f_1=\gamma_1$, $f_s(0)=p$, $f_s(1)=p'$, entonces, por el teorema de Stokes tenemos
+	    \begin{equation*}
+	      \int_{\gamma_0} A - \int_{\gamma_1} A = \int_{\partial f([0,1]^2)} A = \int_{f([0,1]^2)} dA = \int_{f([0,1]^2)} F_D.
+	    \end{equation*}
+
+	    Por tanto, cuando $F_D=0$, el elemento $\tilde{\gamma}_v(1)$ sólo depende de la clase de homotopía de $\gamma$, pero no del representante elegido. En particular, si fijamos $p\in S$, obtenemos una aplicación
+	    \begin{equation*}
+	      \hol^D_p: \pi_1(S,p) \longrightarrow \GL(L_p).
+	    \end{equation*}
+	    De hecho, $\hol^D_p$ es un homomorfismo de grupos, ya que si $\gamma_1 * \gamma_2$ denota la concatenación de dos caminos, tenemos $(\widetilde{\gamma_1 * \gamma_2})_v(1) = \tilde{\gamma}_{1,v} (1) \tilde{\gamma}_{2,v} (1)$.
+	  \end{ejemplo}
+
+	  El caso general, que puede entenderse como una especie de «teorema de Stokes no abeliano», es análogo, aunque un poco más complicado. Supongamos entonces que $S$ es una superficie diferenciable, $p\in S$ un punto, $E\rightarrow S$ un fibrado vectorial y $D$ una conexión en $E$. Tomemos $\gamma:[0,1]\rightarrow S$ un lazo nulhomótopo a $p$ y una homotopía $f:[0,1]^2 \rightarrow S$ con $f_s(0)=f_s(1)=p$, para $f_s=f(s,-)$, tal que $f_0=p$ y $f_1=\gamma$. En general, $\hol^D_p(\gamma)$ y $\hol^D_p(f_s)$, para $s\neq 1$, son elementos distintos de $\GL(E_p)$ y podemos escribir
+	  \begin{equation*}
+	    \hol^D_p(f_s) = \exp(a(s)) \hol^D_p(\gamma),
+	  \end{equation*}
+	  para $a(s) \in \End(E_p)$. 
+
+	  \begin{thm}[Ambrose-Singer]
+     	      \begin{equation*}
+		\partial_s|_{s=0} a = \int_0^1 F_D(\partial_s f(0,t),\partial_t f(0,t)) dt. 
+	      \end{equation*}
+
+	      En particular, si $F_D=0$, la holonomía depende solo de la clase de homotopía del camino y define por tanto una aplicación
+	      \begin{equation*}
+		\hol^D_p: \pi_1(S,p) \rightarrow \GL(E_p).
+	      \end{equation*}
+	  \end{thm}
+	  \begin{proof}
+	    Consideremos el homomorfismo dado por el transporte paralelo
+	    \begin{align*}
+	      U(s,t): E_p &\longrightarrow E_{f(s,t)}\\ 
+	      v &\longmapsto \tilde{f}_{s,v}(t). 
+	      \end{align*}
+	      En particular, $\hol^D_p(f_s) = U(s,1)$, luego, por la regla de la cadena
+	      \begin{equation*}
+		\partial_s U(s,1) = U(s,1) \partial_s a(s).
+	      \end{equation*}
+	      Se trata entonces de hallar $\partial_s a(s) = U(s,1)^{-1} \partial_s U(s,1)$.
+
+	      La ecuación del transporte paralelo se traduce en la siguiente ecuación diferencial para $U$
+	      \begin{equation*}
+		\partial_t U + A(\partial_t f) U = 0.
+	      \end{equation*}
+	      Por tanto
+	      \begin{equation*}
+    	\partial_s \partial_t U = -\partial_s (A(\partial_t f) U) = -\partial_s A(\partial_t f) U - A(\partial_t f) \partial_s U.
+	      \end{equation*}
+	      Ahora, 
+	      \begin{equation*}
+		\partial_t U^{-1} = - U^{-1} \partial_t U U^{-1}  = U^{-1} A(\partial_t f) U U^{-1} = U^{-1} A(\partial_t f).
+	      \end{equation*}
+	      Entonces, como $\partial_t \partial_s U = \partial_s \partial_t U$,
+	      \begin{align*}
+		\partial_t(U^{-1} \partial_s U) &= \partial_t U^{-1} \partial_s U + U^{-1} \partial_t\partial_s U \\ & = U^{-1}[ A(\partial_t f) \partial_s  - \partial_s A(\partial_t f)  - A(\partial_t f) \partial_s] U \\
+		&= U^{-1} \partial_s A(\partial_t f) U.
+	      \end{align*}
+	      Por tanto,
+	      \begin{equation*}
+		U^{-1} \partial_s U = \int_0^t U^{-1} \partial_s A(\partial_t f) U dt.
+	      \end{equation*}
+	      
+	      Calculemos entonces el valor de $\partial_s A(\partial_t f)$. Si escribimos $A=\sum_i A_i dx^i$ y denotamos por $y^i(s,t)$ la coordenada $i$-ésima de $f(s,t)$, 
+	      \begin{equation*}
+		\partial_s A(\partial_t f) = \sum_{i,j} \partial_j A_i \partial_s y^j \partial_t y^i + \sum_i A_i \partial_s \partial_t y^i.
+	      \end{equation*}
+	      Por otra parte,
+	      \begin{align*}
+		\partial_t (U^{-1} A_i U \partial_s y^i ) = \partial_t(U^{-1}A_i U) \partial_s y^i + U^{-1} A_i U \partial_t \partial_s y^i,
+	      \end{align*}
+y también
+	      \begin{align*}
+		\partial_t (U^{-1} A_i U) &= \partial_t U^{-1} A_i U + U^{-1} \partial_t A_i U + U^{-1} A_i \partial_t U \\
+		&= U^{-1} A(\partial_t f) A_i U + U^{-1} \partial_j A_i \partial_t y^j U  - U^{-1} A_i A(\partial_t f) U \\
+		&= U^{-1}[ A_j A_i \partial_t y^j + \partial_j A_i \partial_t y^j - A_i A_j \partial_t y^j]U.
+	      \end{align*}
+De modo que
+\begin{align*}
+  U^{-1} \partial_s U &= \int_0^t U^{-1} \partial_s A(\partial_t f) U dt \\ &= \int_0^t \sum_{i,j}U^{-1} \partial_j A_i U \partial_s y^j \partial_t y^i dt + \int_0^t \sum_i U A_i U^{-1} \partial_s \partial_t y^i dt\\
+  &= \sum_i U^{-1} A_i U \partial_s y^i +\int_0^t \sum_{i,j}U^{-1} \partial_j A_i U \partial_s y^j \partial_t y^i dt \\ & + \int_0^t \sum_{i,j}  U^{-1}[ A_i A_j \partial_t y^i + \partial_i A_j \partial_t y^i - A_j A_i \partial_t y^i]U \partial_s y^j dt\\
+  &= U^{-1} A(\partial_s f) U+ \int_0^t U^{-1}[ dA(\partial_t f,\partial_s f) +A\wedge A(\partial_t f, \partial_s f)] U dt \\
+  &= U^{-1} A(\partial_s f) U + \int_0^t U^{-1} F_D(\partial_t f,\partial_s f) U dt.
+\end{align*}
+
+Ahora, como para todo $s$ se tiene que $f_s(1)=p$, tenemos que $\partial_s f(s,1)=0$.
+Finalmente, obtenemos la fórmula general
+\begin{align*}
+  \partial_s a(s) &= U(s,1)^{-1} \partial_s U (s,1) \\ & = \int_0^1 U^{-1}(s,t) F_D(\partial_t f(s,t), \partial_s f(s,t)) U(s,t) dt.
+\end{align*}
+En particular, cuando $s=0$, el lazo $f_0$ es el lazo constante en $p$, de modo que el transporte paralelo $U(0,t)=\id_{E_p}$. Obtenemos entonces lo que queríamos probar
+\begin{equation*}
+  \partial_s|_{s=0} a(s) = \int_0^1 F_D(\partial_t f(0,t),\partial_s f(0,t))dt.
+\end{equation*}
+	  \end{proof}
+
+	  En resumen, si $\mathcal{F}(E)\subset \mathcal{A}(E)$ denota el conjunto de las conexiones planas en $E$ entonces, fijado un punto $p\in S$, hemos definido una aplicación
+	  \begin{align*}
+	    \hol_p: \mathcal{F}(E) & \longrightarrow \mathrm{Hom}(\pi_1(S,p), \GL_n(\CC)) \\
+	      D &\longmapsto  \hol_p^D.
+	    \end{align*}
+	    Ahora, esta aplicación es equivariante con respecto a ciertas acciones. En primer lugar, está la acción del grupo de transformaciones gauge $\GL(E)$ en $\mathcal{A}(E)$, que en particular da una acción en $\mathcal{F}(E)$. Por otra parte, también podemos tomar la acción de conjugación 
+	    \begin{align*}
+	      \mathrm{Hom}(\pi_1(S,p),\GL_n(\CC)) \times \GL_n(\CC) &\longrightarrow \mathrm{Hom}(\pi_1(S,p),\GL_n(\CC))\\ 
+	      (\rho,g) &\longmapsto g \cdot \rho \cdot g^{-1}.
+	      \end{align*}
+	      Ahora, existe una aplicación natural 
+	      \begin{align*}
+		 \GL(E)&\longrightarrow \GL(E_p)\\ 
+		  f &\longmapsto f_p. 
+		\end{align*}
+		Tenemos entonces que el siguiente diagrama conmuta
+		\begin{center}
+		  \begin{tikzcd}
+		    \mathcal{F}(E)	    \arrow{r}{\hol_p}\arrow{d}[anchor=east]{f} & \mathrm{Hom}(\pi_1(S,p),\GL_n(\CC)) \arrow{d}[anchor=west]{f_p} \\ 
+		     \mathcal{F}(E)     \arrow{r}[anchor=south]{\hol_p} & \mathrm{Hom}(\pi_1(S,p),\GL_n(\CC)).
+		   \end{tikzcd}
+		 \end{center}
+		 En efecto, 
+		 \begin{equation*}
+		   \hol_p^{f\cdot D}(\gamma) (v) = f_p(\hol_p^D(\gamma) (v)) = f_p \circ \hol_p^D(\gamma) \circ f_p^{-1} (f_p v) .
+		 \end{equation*}
+		
+		 \begin{thm}
+		   La aplicación inducida 
+		   \begin{align*}
+		     \hol_p :\mathcal{F}(E)/ \GL(E) &\longrightarrow \mathrm{Hom}(\pi_1(S,p),\GL_n(\CC))/\GL_n(\CC),
+		     \end{align*}
+		     es biyectiva.
+		 \end{thm}
+
+		 \begin{proof}
+		   Para ver que es inyectiva supongamos que $f_1$ y $f_2$ son dos transformaciones gauge tales que $f_1 \cdot D_1 = f_2 \cdot D_1 = D_2$. Entonces, $f=f_1^{-1} \circ f_2$ cumple que $f \cdot D_1 = D_1$ y que $f_p = \id_{E_p}$. Ahora, como $f\circ D_1 \circ f = D_1$, tenemos que, para una sección $s$ de $E$,
+		   \begin{equation*}
+		     f D s = D(fs) = df s + f Ds, 
+		   \end{equation*}
+		   de modo que $df=0$, luego $f=\id_E$ y $f_1=f_2$.
+
+		   Hacer sobreyectiva.
+		 \end{proof}
+
+
+	  \paragraph{Métricas hermíticas.}
+
+	      \paragraph{Conexiones holomorfas.}
+\begin{defn}
+  Sea $X$ una superficie de Riemann y $E\rightarrow X$ un fibrado vectorial diferenciable. Una \emph{conexión holomorfa} en $E$ es un operador $\CC$-lineal
+  \begin{align*}
+    \mathcal{D} :\Omega^0_E &\longrightarrow \Omega^{0,1}_E
+    \end{align*}
+    tal que
+    \begin{equation*}
+      \mathcal{D} (fs)=\delbar f s + f \mathcal{D} s.
+    \end{equation*}
+\end{defn}
+
+Ahora, si $\mathcal{D}$ es una conexión holomorfa en un fibrado $E\rightarrow X$, tomando una referencia $\mathbf{e}^U$ de $E$ en un abierto $U$, podemos escribir 
+\begin{equation*}
+  \mathcal{D} \mathbf{e}^U = \mathbf{e}^U A^U, 
+\end{equation*}
+donde $A^U$ es una matriz cuyas componentes son $(0,1)$-formas $A^U_{ij} \in \Omega^{0,1}_X(U)$. Ahora, dada cualquier otra sección $s= \mathbf{e}^U s^U \in\Gamma(U,E)$, podemos escribir 
+\begin{equation*}
+  \mathcal{D} s = \mathcal{D} \mathbf{e}^U s^U + \mathbf{e}^U \delbar s^U = \mathbf{e}^U (\delbar + A^U) s^U.
+\end{equation*}
+
+\begin{ejemplo}
+  El ejemplo más sencillo lo obtenemos si consideramos cualquier fibrado $E\rightarrow X$ y cualquier conexión $D:\Omega^0_E \rightarrow \Omega^{1}_E$ en $E$. Basta considerar la descomposición en tipos $\Omega^1_E = \Omega^{1,0}_E \oplus \Omega^{0,1}_E$ y definir $D^{0,1}=\pr_{0,1} \circ D: \Omega^0_E \rightarrow \Omega^{0,1}_E$. Claramente, la conexión $D^{0,1}$ es holomorfa ya que, como $$D(fs)= df s + f Ds = \partial f s + \delbar f s + f D^{1,0} s + f D^{0,1} s,$$
+  tenemos que $D^{0,1}s = \delbar f s + f D^{0,1} s$.
+\end{ejemplo}
+
+\begin{ejemplo}
+	      Si $E\rightarrow X$ es un fibrado holomorfo podemos definir una conexión holomorfa asociada a $E$ mediante el operador
+	      \begin{equation*}
+		\delbar_E :\Omega^0_E \longrightarrow \Omega^{0,1}_E.
+		\end{equation*}
+		Localmente, si $\phi_U$ es una trivialización de $E$ y $s=\sum_i f_i \phi_U^{-1}(-,\mathbf{e}_i)$ es una sección $s\in \Omega^0_E(U)$, el operador $\delbar_E$ está definido por la fórmula
+		\begin{equation*}
+		  \delbar_E (s) = \sum_i \delbar f_i \phi_U^{-1}(-,\mathbf{e}_i).
+		\end{equation*}
+		Este operador induce un operador $\delbar_E:\Omega_E^{1,0} \rightarrow \Omega_E^{1,1}$, definido por
+		\begin{equation*}
+		  \delbar_E(\omega s) = \delbar \omega s - \omega \wedge \delbar_E s,
+		\end{equation*}
+		para $\omega \in \Omega^{1,0}(U)$ y $s\in \Omega^0(U)$. 
+
+		Cabe definir entonces los \emph{grupos de cohomología de Dolbeaut con valores en $E$} como
+		\begin{align*}
+    H^{0,0}(X,E)&=\ker(\delbar_E:\Omega^{0,0}(X,E) \rightarrow \Omega^{0,1}(X,E)), \\
+    H^{1,0}(X,E)&=\ker(\delbar_E:\Omega^{1,0}(X,E) \rightarrow \Omega^{1,1}(X,E)), \\
+    H^{0,1}(X,E)&=\coker(\delbar_E:\Omega^{0,0}(X,E) \rightarrow \Omega^{0,1}(X,E)), \\
+    H^{1,1}(X,E)&=\coker(\delbar_E:\Omega^{1,0}(X,E) \rightarrow \Omega^{1,1}(X,E)) .
+		\end{align*}
+		Nótese que al igual que para las formas diferenciales usuales, tenemos dos sucesiones exactas
+
+ \begin{center}    \begin{tikzcd} 
+     0 \arrow{r}& \boldsymbol{\Gamma}_E \arrow[hook]{r}& \Omega^{0,0}_E \arrow{r}{\bar{\partial}} & \Omega^{0,1}_E \arrow{r} & 0   \\
+    0 \arrow{r}& \boldsymbol{\Omega}^1_E \arrow[hook]{r}& \Omega^{1,0}_E \arrow{r}{\bar{\partial}} & \Omega^{1,1}_E \arrow{r} & 0.    \end{tikzcd}  \end{center}
+En primer lugar, inmediatamente de aquí deducimos que
+\begin{align*}
+  H^{0,0}(X,E) & \cong \boldsymbol{\Gamma}_E(X) = \boldsymbol{\Gamma}(X,E) \\
+  H^{1,0}(X,E) & \cong \boldsymbol{\Omega}^1_E(X) = \boldsymbol{\Gamma}(X,E\otimes K_X).
+\end{align*}
+Por esto, normalmente se adopta la notación $H^0(X,E) := \boldsymbol{\Gamma}(X,E)$, que también preferiremos a partir de ahora.
+De forma completamente análoga a como demostramos el teorema de Dolbeaut, usando que los haces de $(p,q)$-formas con valores en $E$ admiten particiones de la unidad, obtenemos que 
+\begin{align*}
+  H^{0,1}(X,E) & \cong H^1(X,\boldsymbol{\Gamma}_E) \\
+  H^{1,1}(X,E) & \cong H^1(X,\boldsymbol{\Omega}^1_E).
+\end{align*}
+Por este motivo, también adoptamos la notación $H^1(X,E):=H^{0,1}(X,E)$. 
+Con esta nueva notación, la dualidad de Serre se escribe como
+\begin{equation*}
+  H^1(X,\OO_X) \cong (H^0(X,K_X))^*.
+\end{equation*}
+
+[Hodge generalizado]
+
+  
+\end{ejemplo}
+
+Por otra parte, si $\mathcal{D}$ es una conexión holomorfa en un fibrado diferenciable $E\rightarrow X$ de rango $n$, podemos considerar el haz
+\begin{equation*}
+  \mathscr{E}=\ker \mathcal{D} \hookrightarrow \Omega^0_E.
+\end{equation*}
+Afirmamos ahora que el haz $\mathscr{E}$ es una estructura holomorfa en $E$. Para ver esto, es necesario demostrar que en cada trivialización $\phi_U$ podemos encontrar una referencia $\mathbf{e}^U$ tal que $\mathcal{D} \mathbf{e}^U=0$ y $\phi_U(\mathbf{e}_i^U) \in (\OO_X(U))^n$, para cada $i= 1,\dots,n$. Si partimos de la referencia $\mathbf{e}^U=\phi_U^{-1}(-,e_i)$ definida por la trivialización $\phi_U$, de lo que se trata es de encontrar una función matricial $f^U \in \mathrm{GL}(n,C^\infty_X)$ tal que $\mathcal{D} (\mathbf{e}^U f^U)=0$. Ahora, 
+\begin{equation*}
+  \mathcal{D}(\mathbf{e}^U f^U) = \mathbf{e}^U (\delbar + A^U) f^U,
+\end{equation*}
+con $A^U$ la matriz de $(0,1)$-formas tal que $\mathcal{D} \mathbf{e}^U = \mathbf{e}^U A^U$. Se trata por tanto de hallar soluciones a la ecuación
+\begin{equation*}
+  \delbar f^U + A^U f^U = 0.
+\end{equation*}
+La existencia y unicidad de estas soluciones está garantizada por uno de los teoremas de existencia que probaremos en la última sección:
+
+\begin{thm}[Koszul-Malgrange]
+  Sea $A:\CC \rightarrow \CC^{n^2}$ una aplicación diferenciable. Para cada matriz invertible $B\in \GL(n,\CC)$ existe un entorno $U$ de $0$ en $\CC$ y una única $f \in \GL(n,C^\infty_U)$ tal que $f(0)=B$ y
+  \begin{equation*}
+    \frac{\partial f}{\partial \bar{z}} +  A f = 0.
+  \end{equation*}
+\end{thm}
+
+[Gauge, equivalencia de categorías, etc.]
+
+[Conexión de Chern y otra equivalencia de categorías]
+
+\subsection{Teoría de Chern-Weil}
+Supongamos que $E\rightarrow S$ es un fibrado vectorial y $D$ es una conexión en $E$. La teoría de Chern-Weil parte de considerar la $2$-forma $\tr F_D$ definida por la traza de la curvatura de $D$. Localmente, la curvatura se expresa como $F^U= dA^U + A^U \wedge A^U$. Ahora, $\tr (A^U \wedge A^U) = 0$ ya que, para dos matrices $A$ y $B$, se tiene que $\tr [A,B] = \tr(A)\tr(B) - \tr(B)\tr(A)=0$. Por tanto,
+\begin{equation*}
+  \tr F^U = \tr (dA^U) = d(\tr A^U).
+\end{equation*}
+Además, si en otro entorno la curvatura se expresa como $F^V|_{U\cap V} = g_{UV}^{-1} F^U|_{U\cap V} g_{UV}$, tenemos que $\tr F^V|_{U\cap V} = \tr F^U|_{U\cap V}$. Concluimos que $F_D$ puede entenderse como una $2$-forma en $X$ que, de hecho, es cerrada, pueso que localmente $\tr F^U = d(\tr A^U)$. Podemos tomar entonces la clase de cohomología de de Rham $[F_D] \in H^2(X,\CC)$.
+
+\begin{prop}
+  La clase de cohomología $[F_D]$ no depende de la conexión $D$.
+\end{prop}
+
+\begin{proof}
+  Como ya vimos, el conjunto $\mathcal{A}(E)$ de las conexiones en $E$ es un espacio afín modelado sobre $\Omega^1(X,\End E)$. Por tanto, si $D,D' \in \mathcal{A}(E)$ son dos conexiones, existe una $1$-forma $A\in \Omega^1(X,\End E)$ tal que $D'=D+A$. Pero entonces
+  \begin{equation*}
+    (D+A)(Ds + As) = D^2 s + A\wedge Ds + dA s - A \wedge Ds + A\wedge A s = (F_D + dA + A\wedge A) s,
+  \end{equation*}
+  de modo que
+  \begin{equation*}
+    \tr F_{D'} = \tr(F_D + dA + A\wedge A) = \tr F_D + d\tr A.
+  \end{equation*}
+  Por tanto, $[\tr F_{D'}] = [\tr F_D]$.
+\end{proof}
+
+Esto demuestra que la clase $[F_D]$ es un invariante del fibrado $E$. Más aún, supongamos que $D$ es una conexión en $E$ dada localmente por $d+A^U$ en un abierto $U$. Para otro abierto $V$, tenemos, en $U\cap V$,
+ \begin{equation*}
+   A^V = g_{UV}^{-1} A^U g_{UV} + g_{UV}^{-1} dg_{UV} = g_{UV}^{-1} A^U g_{UV} + d\log g_{UV},
+ \end{equation*}
+ donde $g_{UV}$ es la función de transición de $E$ en $U\cap V$. Tomando trazas, obtenemos la fórmula
+ \begin{equation*}
+   \tr A^V = \tr A^U + d(\tr (\log g_{UV})).
+ \end{equation*}
+ Ahora, es bien sabido que si $A$ es una matriz, entonces $\exp(\tr A) = \det(\exp A)$, de modo que
+ \begin{equation*}
+   \tr(\log A) = \log (\det A).
+ \end{equation*}
+ Concluimos entonces que
+ \begin{equation*}
+   \tr A^V = \tr A^U + d(\log (\det g_{UV})) = \tr A^U + (\det g_{UV})^{-1} d(\det g_{UV}).
+ \end{equation*}
+ Por tanto, los operadores $d+\tr A^U$ definen globalmente una conexión en $\det E$ que llamamos $\tr D$. Ahora, claramente $F_{\tr D} = \tr F_D$.
+
+ Hemos definido entonces una aplicación
+ \begin{align*}
+    H^1(X,\GL_n(C^\infty_S))&\longrightarrow H^2(X,\CC)\\ 
+    E &\longmapsto [\tr F_D], 
+   \end{align*}
+   para $D$ cualquier conexión en $E$. Además, acabamos de ver que esta aplicación factoriza por el isomorfismo
+   \begin{align*}
+     \det :H^1(X,\GL_n(C^\infty_S)) &\longrightarrow H^1(S,C^\infty_S).
+     \end{align*}
+
+     Una pregunta natural ahora es si, dada una $2$-forma cerrada $\omega\in \Omega^2(S)$, existe un fibrado de línea $L\rightarrow S$ y una conexión $D$ en $L$ tal que $[\omega] = [\tr F_D]$. 
+
+     \begin{prop}[Condición de Weil]
+  Sea $S$ una superficie compacta y $\omega \in \Omega^2(S)$ una $2$-forma cerrada. Existe un fibrado de línea $L\rightarrow S$ y una conexión $D$ en $L$ con $[\omega]=[F_D]$ si y sólo si existe un $k\in \mathbb{Z}$ tal que
+  \begin{equation*}
+    \int_S \omega = 2\pi i k.
+  \end{equation*}
+  Es decir, si y sólo si $[\tfrac{\omega}{2\pi i}] \in H^2(S,\mathbb{Z})$ es una clase de cohomología entera.
+\end{prop}
+
+\begin{proof}
+ Veamos en primer lugar que la condición es necesaria. En efecto, si tomamos una representación plana de la superficie $S$ como un polígono $R$ con lados identificados, tenemos
+ \begin{equation*}
+   \int_S \omega = \int_R \omega. 
+ \end{equation*}
+ Ahora, como $R$ es simplemente conexo, existe una $1$-forma $\alpha$ definida en $R$ tal que $d\alpha = \omega|_R$. Pero entonces, por el teorema de Stokes
+ \begin{equation*}
+   \int_S \omega = \int_{\partial R} \alpha.
+ \end{equation*}
+ Ahora, como un lazo $\gamma$ en torno a $\partial R$ es contractible, $\hol_{\gamma(0)} \gamma = 1$, de modo que
+ \begin{equation*}
+   1=\hol_{\gamma(0)} \gamma = \exp \int_{\partial R} \alpha,
+ \end{equation*}
+ concluimos entonces que
+ \begin{equation*}
+   \int_S \omega = \int_{\partial R} \alpha = 2\pi i k,
+ \end{equation*}
+ para algún $k\in \mathbb{Z}$.
+
+ Veamos ahora que la condición es suficiente. Tomemos en primer lugar una triangulación $\Delta=\{C,A,V\}$ de la superficie $S$. En cada uno de los abiertos $U_v$, para $v\in V$, podemos aplicar el lema de Poincaré para obtener una $1$-forma $\alpha_v$ tal que $d\alpha_v = \omega|_{U_v}$. De nuevo, por el lema de Poincaré, podemos considerar ahora, en cada intersección $U_v \cap U_w$, una función $f_{vw}: U_v \cap U_w \rightarrow \CC$ tal que $df_{vw} = \alpha_v - \alpha_w$. Además, como por hipótesis $[\tfrac{\omega}{2\pi i}] \in H^2(S,\mathbb{Z})$, tenemos que, en $U_u \cap U_v \cap U_w$,
+ \begin{equation*}
+   f_{uv} + f_{vw} - f_{uw} = 2\pi i m,
+ \end{equation*}
+ para algún $m\in \mathbb{Z}$. Pero entonces, si definimos $g_{vw}= \exp(f_{vw})$ para cada $v,w \in V$, tenemos que
+ \begin{equation*}
+   \alpha_v = \alpha_w + df_{vw} = \alpha_w + d\log g_{vw} = \alpha_w g_{vw}^{-1} d g_{vw},
+ \end{equation*}
+ de modo que los operadores $d+\alpha_v$ en cada $U_v$ definen una conexión en el fibrado $L\rightarrow S$ definido por las funciones de transición $g_{vw}$. En efecto, las funciones $g_{vw}$ forman un cociclo ya que
+ \begin{equation*}
+   g_{uv}g_{vw}g_{uw}^{-1} = \exp(f_{uv} + f_{vw} - f_{uw} ) = \exp (2\pi i m) = 1.
+ \end{equation*}
+ Más aún, como para cada $v\in V$ se tiene que $d\alpha_v = \omega|_{U_v}$, la curvatura de la conexión que acabamos de definir es precisamente $\omega$.
+\end{proof}
+
+A la luz de estos resultados, damos las siguientes definiciones.
+
+\begin{defn}
+  Sea $E\rightarrow S$ un fibrado vectorial y $D$ una conexión en $E$. Definimos la \emph{clase de Chern de $E$} como la clase de cohomología entera
+  \begin{equation*}
+    c_1(E) = \frac{i}{2\pi} [\tr F_D] \in H^2(S,\mathbb{Z}).
+  \end{equation*}
+  Definimos el \emph{grado de $E$} como el número entero
+  \begin{equation*}
+    \deg E = \int_S c_1(E) = \frac{i}{2\pi} \int_S \tr F_D \in \mathbb{Z}.
+  \end{equation*}
+\end{defn}
+
+Nótese que tenemos el siguiente diagrama conmutativo, donde, como ya vimos, $\int_S$ es un isomorfismo,
+  \begin{center}
+    \begin{tikzcd}
+      H^1(S,\GL_n(C^\infty_S)) \arrow{r}{c_1} \arrow[bend right]{rr}{\deg} & H^2(S,\mathbb{Z}) \arrow{r}{\int_S} & \mathbb{Z}.     
+    \end{tikzcd}
+  \end{center}
+Además, ya hemos visto que este diagrama factoriza por el isomorfismo $$\det:H^1(S,\GL_n(C^\infty_S)) \rightarrow H^1(S,C^\infty_S).$$ En otras palabras $c_1(E) = c_1(\det E)$.
+
+Finalmente, el siguiente resultado concluye la clasificación diferenciable de los fibrados vectoriales.
+
+\begin{prop}
+  La aplicación $c_1:H^1(S,C^\infty_S) \rightarrow H^2(S,\mathbb{Z})$ es un isomorfismo de grupos.
+\end{prop}
+
+En efecto, de aquí concluimos que $\deg: H^1(S,\GL_n(C^\infty_S)) \rightarrow \mathbb{Z}$ es una aplicación biyectiva, lo que prueba que \emph{los fibrados vectoriales están clasificados (salvo isomorfismo diferenciable) por su rango y su grado}. En una fórmula:
+\begin{equation*}
+  \mathbf{M}(\mathbf{Vect}_n(C^\infty_S)) \cong \mathbb{Z}.
+\end{equation*}
+
+\begin{proof}
+  Veamos en primer lugar que es un homomorfismo de grupos. Para ello, consideremos tres fibrados de línea $L_1$, $L_2$ y $L_3=L_1L_2$ y tres conexiones $D_1$, $D_2$ y $D_3$ en $L_1$, $L_2$ y $L_3$, respectivamente. Supongamos que las conexiones $D_i$ están representadas localmente en un abierto $U$ por las matrices $A_i^U$, con
+  \begin{equation*}
+    A_i^V = A_i^U + d\log(g^i_{UV}),
+  \end{equation*}
+  en $U\cap V$, para otro abierto $V$ y $g^i_{UV}$ la función de transición de $L_i$ entre $U$ y $V$. Tenemos entonces que
+  \begin{equation*}
+    A_3^V - A_1^V - A_2^V = A_3^U - A_1^U - A_2^U + d\log(g^3_{UV}(g^1_{UV})^{-1} (g^2_{UV})^{-1}) = A_3^U - A_1^U - A_2^U,
+  \end{equation*}
+  ya que $g^3_{UV} = g^1_{UV} g^2_{UV}$. Por tanto, existe una $1$-forma $A \in \Omega^1(S)$ tal que $$A|_U = A_3^U - A_1^U - A_2^U.$$
+  Ahora, 
+  \begin{equation*}
+    dA |_U = dA_3^U - dA_1^U - dA_2^U = (F_{D_3} - F_{D_1} - F_{D_2})|_U,
+  \end{equation*}
+  de modo que $[F_{D_3}]=[F_{D_1}] + [F_{D_2}]$.
+
+  Para ver ahora que es inyectiva basta probar que si $c_1(L_1)=c_2(L_2)$, entonces $L_1 \cong L_2$. Como $c_1(L_1)=c_2(L_2)$, si tomamos $D_1$ y $D_2$ conexiones en $L_1$ y $L_2$, respectivamente, tenemos que
+  \begin{equation*}
+    F_{D_1} - F_{D_2} = dA
+  \end{equation*}
+  para cierta $A\in \Omega^1(S)$. Ahora, localmente, en cierto abierto trivializante $U\subset S$,
+  \begin{equation*}
+    dA|_U = (F_{D_1} - F_{D_2}) |_U = d(A_1^U) - d(A_2^U)= d(A_1^U - A_2^U),
+  \end{equation*}
+  donde $A_i^U$ es una $1$-forma representando localmente la conexión $D_i$.
+  Por tanto, para otro abierto trivializante $V$, en $U\cap V$,
+  \begin{equation*}
+    A_1^U - A_2^U = A|_U = A_1^V - A_2^V = A_1^U - A_2^U + d\log( (g_{UV}^1) (g_{UV}^2)^{-1}).
+  \end{equation*}
+  De aquí deducimos a que en cada $U\cap V$ existe una constante $c_{UV} \in \CC$ tal que 
+  \begin{equation*}
+    \log( (g_{UV}^1) (g_{UV}^2)^{-1}) = c_{UV}.
+  \end{equation*}
+  Estas $c_{UV}$ claramente forman un cociclo y, como $H^1(\mathfrak{U},C^\infty_S)=0$, donde $\mathfrak{U}$ denota el conjunto de los abiertos trivializantes, tenemos que ha de existir una $0$-cocadena $(f_U)_{U\in \mathfrak{U}} \in C^0(\mathfrak{U},C^\infty_S)$ tal que
+  \begin{equation*}
+    c_{UV} = f_U - f_V.
+  \end{equation*}
+  Por tanto,
+  \begin{equation*}
+    g_{UV}^1 (g_{UV}^2)^{-1} = e^{f_U-f_V},
+  \end{equation*}
+  luego
+  \begin{equation*}
+    g_{UV}^{1} = e^{f_U} g_{UV}^2 e^{-f_V},
+  \end{equation*}
+  de modo que $L_1 \cong L_2$.
+
+  Finalmente, si $\omega \in H^2(S,\mathbb{Z})$, entonces, como ya hemos visto, la condición de Weil garantiza que existen un fibrado de línea $L\rightarrow S$ y una conexión $D$ en $L$ con $[F_D]=- 2\pi i [\omega]$, de modo que $[\omega]=c_1(L)$. Esto prueba que $c_1$ es sobreyectiva.
+\end{proof}
+
+% Para el siguiente capítulo
+%	  \subsection{Fibrados estables}
+
+%	Hablar de familias, espacio de móduli no Hausdorff, etc.
+
+
+
+
+
+
+  
+\end{document}
+
+
+
